@@ -34,35 +34,34 @@ const DiscoverSection = () => {
             Discover
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            From studio to family home, uncover rentals tailored to you today.
+            Find your Dream Rental Property Today!
           </p>
           <p className="mx-auto mt-2 max-w-3xl text-gray-500">
-            Discover your next rental effortlessly: refine by price, location,
-            amenities, and dates; compare shortlisted homes side-by-side, see
-            availability, schedule viewings instantly, and apply
-            securely—everything in one place so you spend less time searching
-            and more time settling in comfortably today.
+            Searching for your dream rental property has never been easier. With
+            our user-friendly search feature, you can quickly find the perfect
+            home that meets all your needs. Start your search today and discover
+            your dream rental property!
           </p>
         </motion.div>
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 lg:gap-12 xl:gap-16">
           {[
             {
               imageSrc: "/landing-icon-wand.png",
-              title: "Discover Local Listings",
+              title: "Search for Properties",
               description:
-                "Explore verified rentals near you with powerful filters and real-time details.",
+                "Browse through our extensive collection of rental properties in your desired location.",
             },
             {
               imageSrc: "/landing-icon-calendar.png",
-              title: "Schedule and Secure",
+              title: "Book Your Rental",
               description:
-                "Pick viewing times, reserve your place, and complete paperwork entirely online.",
+                "Once you've found the perfect rental property, easily book it online with just a few clicks.",
             },
             {
               imageSrc: "/landing-icon-heart.png",
-              title: "Settle In Happily",
+              title: "Enjoy your New Home",
               description:
-                "Move in smoothly with helpful checklists and neighborhood tips tailored to you.",
+                "Move into your new rental property and start enjoying your dream home.",
             },
           ].map((card, index) => (
             <motion.div key={index} variants={itemVariants}>

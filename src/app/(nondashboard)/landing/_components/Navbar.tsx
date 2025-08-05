@@ -1,16 +1,17 @@
+import AnimatedText from "@/components/custom/AnimatedText";
+import { Button } from "@/components/ui/button";
+import { NAVBAR_HEIGHT } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../../../../components/ui/button";
-import AnimatedText from "../../../../components/custom/AnimatedText";
 
 function Navbar() {
   return (
-    <header className="fixed top-[5px] left-1/2 z-50 w-29/30 -translate-x-1/2 rounded-full border-b-[0.5px] border-orange-900 shadow-xl">
+    <header className="fixed top-[5px] left-1/2 z-50 w-29/30 -translate-x-1/2 rounded-full border-b-[0.5px] border-orange-900 shadow-xl  style={{ height: `${NAVBAR_HEIGHT}px` }}">
       <nav className="nav-blur flex w-full items-center justify-between rounded-full px-9 py-3 text-white">
         <div className="group flex items-center gap-4 md:gap-6">
           <Link
             href="/"
-            className="hover:!tex-primary-300 cursor-pointer"
+            className="hover:!text-primary-300 cursor-pointer"
             scroll={false}
           >
             <div className="flex items-center gap-3">
@@ -49,7 +50,7 @@ function Navbar() {
               variant="secondary"
               className="hover:text-primary-700 transform-gpu cursor-pointer rounded-lg border-white bg-orange-600 text-white transition-colors duration-200 ease-linear hover:bg-white"
             >
-              Sign up
+              Sign Up
             </Button>
           </Link>
         </div>
