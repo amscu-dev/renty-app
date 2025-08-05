@@ -1,26 +1,27 @@
+"use client";
+import usePrefersReducedMotion from "./../../hooks/usePrefersReducedMotion";
+
 type AnimatedTextProp = {
   text: string;
-  disabled?: boolean;
   speed?: number;
   className?: string;
 };
 
 const AnimatedText = ({
   text,
-  disabled = false,
   speed = 5,
   className = "",
 }: AnimatedTextProp) => {
   const animationDuration = `${speed}s`;
-
+  const prefersReducedMotion = usePrefersReducedMotion();
   return (
     <div
-      className={`text-[#b5b5b5a4] bg-clip-text inline-block ${
-        disabled ? "" : "animate-shine"
+      className={`hidden bg-clip-text text-[#b5b5b5a4] md:inline-block ${
+        prefersReducedMotion ? "" : "animate-shine"
       } ${className}`}
       style={{
         backgroundImage:
-          "linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgb(255, 255, 255) 50%, rgba(255, 255, 255, 0) 60%)",
+          "linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgb(255, 119, 0) 50%, rgba(255, 255, 255, 0) 60%)",
         backgroundSize: "200% 100%",
         WebkitBackgroundClip: "text",
         animationDuration: animationDuration,

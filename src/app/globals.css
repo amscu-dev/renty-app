@@ -23,6 +23,7 @@ body,
 @theme inline {
   /* TEXT ANIMATION */
   --animate-shine: shine 5s linear infinite;
+  --animate-main: main 0.8s ease-in forwards;
   @keyframes shine {
     0% {
       background-position: 100% 0;
@@ -31,6 +32,18 @@ body,
       background-position: -100% 0;
     }
   }
+
+  @keyframes main {
+    0% {
+      opacity: 0;
+      transform: translateY(20%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* FONT */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -175,7 +188,7 @@ body,
 }
 
 .dashboard-container {
-  @apply pt-8 pb-5 px-8;
+  @apply px-8 pt-8 pb-5;
 }
 
 .mapboxgl-popup-content {
@@ -213,20 +226,20 @@ body,
 }
 
 .marker-popup-image {
-  @apply w-10 h-10 object-cover bg-white rounded-lg;
+  @apply h-10 w-10 rounded-lg bg-white object-cover;
 }
 
 .marker-popup-price {
-  @apply text-sm font-semibold text-primary-200;
+  @apply text-primary-200 text-sm font-semibold;
 }
 
 .marker-popup-title {
-  @apply hover:underline hover:text-blue-300 cursor-pointer;
+  @apply cursor-pointer hover:text-blue-300 hover:underline;
   @apply focus:outline-none;
 }
 
 .marker-popup-price-unit {
-  @apply text-xs text-primary-500 font-normal;
+  @apply text-primary-500 text-xs font-normal;
 }
 
 /* scrollbar styling */
@@ -340,5 +353,23 @@ body,
   @apply bg-background border-border text-foreground hover:bg-muted;
 }
 
-box {
+.nav-blur {
+  background: rgba(39, 39, 42, 0.84);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.7px);
+  -webkit-backdrop-filter: blur(7.7px);
+}
+
+.fade-out-hero {
+  animation: fade-out linear;
+  animation-timeline: view();
+  animation-range: exit -200px;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    transform: scaleX(0.75);
+  }
 }
