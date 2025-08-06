@@ -24,9 +24,8 @@ const DiscoverSection = () => {
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.8 }}
       variants={containerVariants}
-      className="mb-16 bg-white py-12"
+      className="fade-out-features mb-16 bg-white pb-18"
     >
       <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-12 xl:max-w-7xl xl:px-16">
         <motion.div variants={itemVariants} className="my-12 text-center">

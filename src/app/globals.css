@@ -21,6 +21,7 @@ body,
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --breakpoint-2xl: 1560px;
   /* TEXT ANIMATION */
   --animate-shine: shine 5s linear infinite;
   --animate-main: main 0.8s ease-in forwards;
@@ -354,11 +355,11 @@ body,
 }
 
 .nav-blur {
-  background: rgba(39, 39, 42, 0.84);
+  background: rgba(39, 39, 42, 0.6);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(7.7px);
-  -webkit-backdrop-filter: blur(7.7px);
+  backdrop-filter: blur(6.3px);
+  -webkit-backdrop-filter: blur(6.3px);
 }
 
 .fade-out-hero {
@@ -367,9 +368,50 @@ body,
   animation-range: exit -200px;
 }
 
+.fade-out-features {
+  animation: fade-out linear;
+  animation-timeline: view();
+  animation-range: exit -50px;
+}
+
 @keyframes fade-out {
   to {
     opacity: 0;
     transform: scaleX(0.75);
+  }
+}
+
+.search-navbar {
+  transform-origin: center left;
+  animation: scale-search 500ms ease-out forwards;
+}
+@keyframes scale-search {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.4) translateY(-200%);
+  }
+  25% {
+    opacity: 1;
+    transform: scaleX(0.4) translateY(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.hero-image-animation {
+  animation: hero-animation linear forwards;
+  animation-timeline: view();
+  animation-range: exit 250px;
+}
+
+@keyframes hero-animation {
+  0% {
+    opacity: 1;
+  }
+  85%,
+  100% {
+    opacity: 0;
+    filter: blur(20px);
   }
 }

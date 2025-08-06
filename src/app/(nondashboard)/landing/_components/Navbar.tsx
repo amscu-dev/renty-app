@@ -1,14 +1,24 @@
+"use client";
 import AnimatedText from "@/components/custom/AnimatedText";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
+import { useAppSelector } from "@/state/redux";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 function Navbar() {
+  const isNavbarSearchVisible = useAppSelector(
+    (state) => state.global.isNavbarSearchVisible,
+  );
   return (
-    <header className="fixed top-[5px] left-1/2 z-50 w-29/30 -translate-x-1/2 rounded-full border-b-[0.5px] border-orange-900 shadow-xl  style={{ height: `${NAVBAR_HEIGHT}px` }}">
-      <nav className="nav-blur flex w-full items-center justify-between rounded-full px-9 py-3 text-white">
-        <div className="group flex items-center gap-4 md:gap-6">
+    <header
+      className="fixed top-[5px] left-1/2 z-50 w-29/30 -translate-x-1/2 rounded-full border-b-[0.5px] border-orange-900 shadow-xl"
+      // style={{ height: `${NAVBAR_HEIGHT}px` }}
+    >
+      <nav className="nav-blur flex w-full items-center justify-between gap-4 rounded-full px-9 py-3 text-white">
+        <div className="group mr-2 flex items-center gap-4 md:gap-6">
           <Link
             href="/"
             className="hover:!text-primary-300 cursor-pointer"
@@ -31,11 +41,36 @@ function Navbar() {
             </div>
           </Link>
         </div>
-        <AnimatedText
-          className="font-semibold sm:text-[11px] sm:font-normal lg:text-lg"
-          text="Rent with confidence: real homes, fair prices, trusted guidance at every step of the way."
-          speed={3}
-        />
+        {!isNavbarSearchVisible && (
+          <AnimatedText
+            className="font-light sm:text-[11px] sm:font-normal lg:text-lg"
+            text="Rent with confidence: real homes with trusted guidance at every step of the way."
+            speed={3}
+          />
+        )}
+        {isNavbarSearchVisible && (
+          <div
+            className={`flex items-center justify-center ${isNavbarSearchVisible && "search-navbar"} relative hidden sm:flex sm:w-xs md:w-md lg:w-2xl`}
+          >
+            <Input
+              type="text"
+              // value=""
+
+              // onChange={() => {}}
+
+              placeholder="Search by city, neighborhood or address"
+              className="w-full rounded-full border-none bg-white px-4 font-light sm:text-sm lg:text-base"
+            />
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="transform-translate absolute right-1 size-8 rounded-full bg-orange-600 p-0 text-white hover:bg-orange-600/75 hover:text-white active:scale-90"
+            >
+              <Search />
+            </Button>
+          </div>
+        )}
         <div className="flex items-center gap-5">
           <Link href="/signin">
             <Button

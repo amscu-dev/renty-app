@@ -29,7 +29,7 @@ const FeaturesSection = () => {
       whileInView="visible"
       viewport={{ once: true }}
       variants={containerVariants}
-      className="bg-white px-6 py-24 sm:px-8 lg:px-12 xl:px-16"
+      className="fade-out-features bg-white px-6 py-24 sm:px-8 lg:px-12 xl:px-16"
     >
       <div className="mx-auto max-w-4xl xl:max-w-6xl">
         <motion.h2

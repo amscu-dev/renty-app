@@ -7,14 +7,14 @@ import Link from "next/link";
 
 const CallToActionSection = () => {
   return (
-    <div className="relative py-24">
+    <div className="relative py-24 2xl:py-48">
       <Image
         src="/landing-call-to-action.jpg"
         alt="Rentiful Search Section Background"
         fill
         className="object-cover object-center"
       />
-      <div className="bg-opacity-60 absolute inset-0 bg-black"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}

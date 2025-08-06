@@ -16,7 +16,7 @@ const AnimatedText = ({
   const prefersReducedMotion = usePrefersReducedMotion();
   return (
     <div
-      className={`hidden bg-clip-text text-[#b5b5b5a4] md:inline-block ${
+      className={`hidden bg-clip-text text-[#ffffff3a] md:inline-block ${
         prefersReducedMotion ? "" : "animate-shine"
       } ${className}`}
       style={{
