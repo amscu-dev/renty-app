@@ -25,10 +25,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         setIsLoading(false);
       }
     }
+    console.log(authUser);
   }, [authUser, router, pathname]);
 
-  if (authLoading || isLoading) return <>Loading...</>;
-  if (!authUser?.userRole) return null;
+  // if (authLoading || isLoading) return <>Loading...</>;
+
   return (
     <div className="h-full w-full overflow-y-auto">
       <Navbar />

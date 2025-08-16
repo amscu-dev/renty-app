@@ -47,7 +47,7 @@ function Navbar() {
           isDashboardPage ? "bg-slate-900" : "nav-blur",
         )}
       >
-        <div className="group mr-2 flex items-center gap-4 md:gap-6">
+        <div className="mr-2 flex items-center gap-4 md:gap-6">
           {isDashboardPage && (
             <div className="md:hidden">
               <SidebarTrigger />{" "}
@@ -55,7 +55,7 @@ function Navbar() {
           )}
           <Link
             href="/"
-            className="hover:!text-primary-300 cursor-pointer"
+            className="hover:!text-primary-300 group cursor-pointer"
             scroll={false}
           >
             <div className="flex items-center gap-3">
@@ -77,7 +77,7 @@ function Navbar() {
           {isDashboardPage && authUser && (
             <Button
               variant="secondary"
-              className="bg-rpimary-50 text-primary-700 hover hover:bg-secondary-500 hover:text-primary-50 md:ml-4"
+              className="bg-secondary-500 text-primary-50 hover:bg-primary-50 hover:text-primary-700 transform-gpu transition-colors duration-300 md:ml-4"
               onClick={() => {
                 router.push(
                   authUser.userRole?.toLowerCase() === "manager"

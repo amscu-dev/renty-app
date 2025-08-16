@@ -1,5 +1,5 @@
 import { createNewUserInDatabase, withToast } from "@/lib/utils";
-import { Manager, Tenant } from "@/types/prismaTypes";
+import { ITenant } from "@/types/mongo";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   type AuthSession,
@@ -37,6 +37,7 @@ export const api = createApi({
               : `/tenants/${user.userId}`;
 
           let userDetailsResponse = await fetchWithBQ(endpoint);
+          console.log(userDetailsResponse);
           // if user doesn`t exist create new user
           if (
             userDetailsResponse.error &&
@@ -53,7 +54,7 @@ export const api = createApi({
           return {
             data: {
               cognitoInfo: { ...user },
-              userInfo: userDetailsResponse.data as Tenant | Manager,
+              userInfo: userDetailsResponse.data as ITenant & { _id: string },
               userRole,
             },
           };
@@ -63,8 +64,8 @@ export const api = createApi({
       },
     }),
     updateTenantSettings: build.mutation<
-      Tenant,
-      { cognitoId: string } & Partial<Tenant>
+      ITenant,
+      { cognitoId: string } & Partial<ITenant>
     >({
       query: ({ cognitoId, ...updatedTenant }) => ({
         url: `tenants/${cognitoId}`,

@@ -7,6 +7,13 @@
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 html,
 body,
 #root,

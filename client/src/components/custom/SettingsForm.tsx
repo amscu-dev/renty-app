@@ -15,6 +15,7 @@ const SettingsForm = ({
   const form = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
     defaultValues: initialData,
+    mode: "onBlur",
   });
 
   const toggleEditMode = () => {

@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-
+  console.log(pathname);
   useEffect(() => {
     if (authUser) {
       const userRole = authUser.userRole?.toLowerCase();
@@ -41,7 +41,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className="bg-primary-100 min-h-screen w-full px-7">
         <Navbar />
-        <div className="mt-[75px] bg-rose-800">
+        <div className="mt-[75px]">
           <main className="flex">
             <AppSidebar userType={authUser.userRole.toLowerCase()} />
 
