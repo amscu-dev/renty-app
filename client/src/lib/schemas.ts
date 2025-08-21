@@ -43,3 +43,60 @@ export const settingsSchema = z.object({
 });
 
 export type SettingsFormData = z.infer<typeof settingsSchema>;
+
+const SPECIAL_CHAR_RE = /[!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~]/;
+
+const passwordSchema = z
+  .string({ error: "Password is required." })
+  .min(8, "Password must be at least 8 characters long.")
+  .refine((v) => /[0-9]/.test(v), {
+    message: "Password must contain at least one number (0–9).",
+  })
+  .refine((v) => /[a-z]/.test(v), {
+    message: "Password must contain at least one lowercase letter (a–z).",
+  })
+  .refine((v) => /[A-Z]/.test(v), {
+    message: "Password must contain at least one uppercase letter (A–Z).",
+  })
+  .refine((v) => SPECIAL_CHAR_RE.test(v), {
+    message: "Password must contain at least one special character.",
+  });
+
+const emailSchema = z
+  .email({
+    error: "Please provide a valid email address.",
+  })
+  .trim();
+
+export const authSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export type AuthData = z.infer<typeof authSchema>;
+
+const ROLE_VALUES = ["tenant", "manager"] as const;
+
+export const signUpSchema = z
+  .object({
+    email: emailSchema,
+    username: z
+      .string({ error: "Username is required." })
+      .trim()
+      .min(2, "Username must be at least 2 characters long.")
+      .max(50, "Username cannot exceed 50 characters.")
+      .regex(/^[A-Za-z0-9]+$/, {
+        error: "Username may contain letters and numbers only.",
+      }),
+    password: passwordSchema,
+    confirmPassword: z
+      .string({ error: "Confirm password is required." })
+      .min(8, "Confirm password must be at least 8 characters long."),
+    role: z.enum(ROLE_VALUES, { error: "Please select a value." }),
+  })
+  .refine((data) => data.confirmPassword === data.password, {
+    message: "Passwords must match.",
+    path: ["confirmPassword"],
+  });
+
+export type SignUpData = z.infer<typeof signUpSchema>;

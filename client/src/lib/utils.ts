@@ -4,6 +4,27 @@ import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
 import { type JWT, type AuthUser } from "aws-amplify/auth";
 
+export function formatCognitoErrorMessages(error: unknown): string {
+  if (error instanceof Error) {
+    console.log(error.message);
+    console.log(error.name);
+    if (error.name === "UsernameExistsException")
+      return "Email is already in use. Please choose another one.";
+    if (error.name === "CodeMismatchException") return error.message;
+    if (
+      error.name === "NotAuthorizedException" &&
+      error.message.startsWith("Incorrect username")
+    )
+      return "You've provided a wrong email or password.";
+    if (
+      error.name === "NotAuthorizedException" &&
+      error.message.startsWith("Password")
+    )
+      return "Too many attemps! Please try again later.";
+  }
+  return "An error occurred processing your request 😓";
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -72,7 +93,7 @@ export const createNewUserInDatabase = async (
     method: "POST",
     body: {
       cognitoId: user.userId,
-      name: user.username,
+      name: idToken?.payload?.preferred_username,
       email: idToken?.payload?.email || "",
       phoneNumber: "",
     },

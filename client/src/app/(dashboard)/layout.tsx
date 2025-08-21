@@ -7,51 +7,37 @@ import { useGetAuthUserQuery } from "@/state/api";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/custom/Navbar";
 import AppSidebar from "@/components/custom/AppSidebar";
+import DashboardLayoutSkeleton from "../../components/custom/DashboardLayoutSkeleton";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
-  console.log(pathname);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (authUser) {
-      const userRole = authUser.userRole?.toLowerCase();
-      if (
-        (userRole === "manager" && pathname.startsWith("/tenants")) ||
-        (userRole === "tenant" && pathname.startsWith("/managers"))
-      ) {
-        // redirectul din layout catre unde am nevoie sa merg
-        router.push(
-          userRole === "manager"
-            ? "/managers/properties"
-            : "/tenants/favorites",
-          { scroll: false },
-        );
-      } else {
-        setIsLoading(false);
-      }
-    }
-  }, [authUser, router, pathname]);
-
-  if (authLoading || isLoading) return <>Loading...</>;
+    setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+  }, []);
+  const router = useRouter();
+  // if (true) return <DashboardLayoutSkeleton />;
   if (!authUser?.userRole) return null;
 
   return (
-    <SidebarProvider>
-      <div className="bg-primary-100 min-h-screen w-full px-7">
-        <Navbar />
-        <div className="mt-[75px]">
-          <main className="flex">
-            <AppSidebar userType={authUser.userRole.toLowerCase()} />
-
-            <div className="flex-grow transition-all duration-300">
-              {children}
-            </div>
-          </main>
+    <div className="relative h-full">
+      <DashboardLayoutSkeleton isLoading={loading} />
+      <SidebarProvider>
+        <div className="bg-primary-100 min-h-screen w-full px-7">
+          <Navbar />
+          <div className="mt-[75px]">
+            <main className="flex">
+              <AppSidebar userType={authUser.userRole.toLowerCase()} />
+              <div className="flex-grow transition-all duration-300">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </div>
   );
 };
 

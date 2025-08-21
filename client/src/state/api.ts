@@ -1,5 +1,6 @@
 import { createNewUserInDatabase, withToast } from "@/lib/utils";
-import { ITenant } from "@/types/mongo";
+import { IManager } from "@/types/manager";
+import { ITenant } from "@/types/tenant";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   type AuthSession,
@@ -35,7 +36,8 @@ export const api = createApi({
             userRole === "manager"
               ? `/managers/${user.userId}`
               : `/tenants/${user.userId}`;
-
+          console.log(session);
+          console.log(user);
           let userDetailsResponse = await fetchWithBQ(endpoint);
           console.log(userDetailsResponse);
           // if user doesn`t exist create new user
@@ -72,7 +74,7 @@ export const api = createApi({
         method: "PUT",
         body: updatedTenant,
       }),
-      invalidatesTags: (result) => [{ type: "Tenants", id: result?.id }],
+      invalidatesTags: (result) => [{ type: "Tenants", id: result?.cognitoId }],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           success: "Settings updated successfully!",
@@ -81,15 +83,17 @@ export const api = createApi({
       },
     }),
     updateManagerSettings: build.mutation<
-      Manager,
-      { cognitoId: string } & Partial<Manager>
+      IManager,
+      { cognitoId: string } & Partial<IManager>
     >({
       query: ({ cognitoId, ...updatedManager }) => ({
         url: `managers/${cognitoId}`,
         method: "PUT",
         body: updatedManager,
       }),
-      invalidatesTags: (result) => [{ type: "Managers", id: result?.id }],
+      invalidatesTags: (result) => [
+        { type: "Managers", id: result?.cognitoId },
+      ],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           success: "Settings updated successfully!",

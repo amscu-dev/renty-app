@@ -431,3 +431,255 @@ body,
   height: 98%;
   @apply rounded-3xl shadow-lg;
 } */
+.signup-layout {
+  background: rgba(255, 255, 255, 0.37);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.81);
+  /* animation: bg-animation 10000ms linear infinite; */
+}
+
+/* @keyframes bg-animation {
+  0% {
+    background: rgba(255, 255, 255, 0.24);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.6px);
+    -webkit-backdrop-filter: blur(8.6px);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+  }
+  50% {
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  75% {
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    background: rgba(255, 255, 255, 0.24);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.6px);
+    -webkit-backdrop-filter: blur(8.6px);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+  }
+} */
+
+.bounce-logo {
+  transform-origin: center bottom;
+  animation: bounce-logo 1500ms ease-in-out infinite;
+}
+
+@keyframes bounce-logo {
+  0% {
+    transform: scaleY(0.75);
+  }
+  50% {
+    transform: scaleY(1) translateY(-20px);
+  }
+  100% {
+    transform: scaleY(0.75) translateY(0px);
+  }
+}
+
+.auth-button {
+  width: 100%;
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  transition: filter 250ms;
+  margin-top: 10px;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: hsl(0deg 0% 0% / 0.25);
+  will-change: transform;
+  transform: translateY(2px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(
+    to left,
+    hsl(340deg 100% 16%) 0%,
+    hsl(340deg 100% 32%) 8%,
+    hsl(340deg 100% 32%) 92%,
+    hsl(340deg 100% 16%) 100%
+  );
+}
+
+.front {
+  display: block;
+  position: relative;
+  padding: 8px 27px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: white;
+  background: hsl(19, 100%, 47%);
+  will-change: transform;
+  transform: translateY(-4px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.auth-button:hover {
+  filter: brightness(110%);
+}
+
+.auth-button:hover .front {
+  transform: translateY(-6px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.auth-button:active .front {
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+
+.auth-button:hover .shadow {
+  transform: translateY(4px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.auth-button:active .shadow {
+  transform: translateY(1px);
+  transition: transform 34ms;
+}
+
+.auth-button:focus:not(:focus-visible) {
+  outline: none;
+}
+/* ////////////////////////////////// */
+
+.auth-button:disabled .front {
+  background: hsl(19, 95%, 42%);
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+.auth-button:disabled .shadow {
+  transform: translateY(1px);
+  transition: transform 34ms;
+}
+
+.container-input {
+  @apply font-mono;
+}
+.character-input {
+  border: none;
+  @apply rounded-md;
+}
+
+.character-input--inactive {
+  border: none;
+  @apply bg-neutral-50 text-slate-400 outline-1 outline-orange-700;
+}
+.character-input--selected {
+  border: none;
+  @apply text-slate-800 outline-[4px] outline-orange-500;
+}
+.character-input--selected {
+  @apply text-slate-800;
+}
+.character-input--filled {
+  @apply text-slate-800 outline-[2px] outline-orange-500;
+  border: none;
+  @apply text-slate-800;
+}
+
+.container-input:has(> input:disabled) .character-input {
+  @apply text-slate-800 outline-[3px] outline-orange-500;
+}
+
+.erorr-animation {
+  animation: animate-error 500ms ease forwards;
+}
+
+@keyframes animate-error {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0px);
+    opacity: 100;
+  }
+}
+
+.loading-auth {
+  animation: loading-auth 2000ms ease infinite;
+}
+
+@keyframes loading-auth {
+  0% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 25%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 20px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side, #e5e7eb 90%, #0000) 0 /
+    calc(100% / 3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+  transform: translateY(-3px);
+}
+@keyframes l1 {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
+}
+
+.skeleton-dashboard {
+  animation: dash-ske 750ms ease-in forwards;
+}
+@keyframes dash-ske {
+  0% {
+    transform: translateY(0%);
+  }
+  25% {
+    transform: translateY(15%);
+  }
+  99% {
+    transform: translateY(-110%);
+  }
+  100% {
+    transform: translateY(-110%);
+    visibility: hidden;
+  }
+}

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-// import { fileTypeFromBuffer } from "file-type";
 import AppError from "../utils/appError";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 

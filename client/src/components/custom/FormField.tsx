@@ -22,8 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { Edit, X, Plus } from "lucide-react";
+import { Edit, X, Plus, CircleSlash } from "lucide-react";
 import { registerPlugin } from "filepond";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
@@ -45,9 +46,11 @@ interface FormFieldProps {
     | "switch"
     | "password"
     | "file"
-    | "multi-input";
+    | "multi-input"
+    | "radio-group";
   placeholder?: string;
   options?: { value: string; label: string }[];
+  optionsRadio?: { value: string; label: string; explanation: string }[];
   accept?: string;
   className?: string;
   labelClassName?: string;
@@ -56,6 +59,7 @@ interface FormFieldProps {
   disabled?: boolean;
   multiple?: boolean;
   isIcon?: boolean;
+  showErrorMessage?: boolean;
   initialValue?: string | number | boolean | string[];
 }
 
@@ -65,19 +69,21 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
   type = "text",
   placeholder,
   options,
+  optionsRadio,
   accept,
   className,
   inputClassName,
   labelClassName,
   disabled = false,
   multiple = false,
+  showErrorMessage = true,
   isIcon = false,
   initialValue,
 }) => {
   const { control } = useFormContext();
 
   const renderFormControl = (
-    field: ControllerRenderProps<FieldValues, string>
+    field: ControllerRenderProps<FieldValues, string>,
   ) => {
     switch (type) {
       case "textarea":
@@ -106,7 +112,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  className={`cursor-pointer hover:!bg-gray-100 hover:!text-customgreys-darkGrey`}
+                  className={`hover:!text-customgreys-darkGrey cursor-pointer hover:!bg-gray-100`}
                 >
                   {option.label}
                 </SelectItem>
@@ -160,6 +166,32 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
             inputClassName={inputClassName}
           />
         );
+      case "radio-group":
+        return (
+          <RadioGroup
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            className="flex flex-col"
+          >
+            {optionsRadio?.map((option) => (
+              <FormItem className="flex items-center gap-3" key={option.value}>
+                <FormControl>
+                  <RadioGroupItem value={option.value} />
+                </FormControl>
+                <FormLabel className="cursor-pointer font-sans font-normal">
+                  <div className="group">
+                    <span className="mr-2 font-semibold text-slate-800 transition-colors duration-150 group-hover:text-orange-600">
+                      {option.label}
+                    </span>
+                    <span className="text-slate-400 transition-colors duration-150 group-hover:text-orange-600">
+                      {option.explanation}
+                    </span>
+                  </div>
+                </FormLabel>
+              </FormItem>
+            ))}
+          </RadioGroup>
+        );
       default:
         return (
           <Input
@@ -185,7 +217,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
           } relative ${className}`}
         >
           {type !== "switch" && (
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <FormLabel className={`text-sm ${labelClassName}`}>
                 {label}
               </FormLabel>
@@ -194,7 +226,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
                 isIcon &&
                 type !== "file" &&
                 type !== "multi-input" && (
-                  <Edit className="size-4 text-customgreys-dirtyGrey" />
+                  <Edit className="text-customgreys-dirtyGrey size-4" />
                 )}
             </div>
           )}
@@ -204,7 +236,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
               value: field.value !== undefined ? field.value : initialValue,
             })}
           </FormControl>
-          <FormMessage className="text-red-400" />
+          {showErrorMessage ? <FormMessage /> : null}
         </FormItem>
       )}
     />
@@ -240,7 +272,7 @@ const MultiInputField: React.FC<MultiInputFieldProps> = ({
                 <Input
                   {...field}
                   placeholder={placeholder}
-                  className={`flex-1 border-none bg-customgreys-darkGrey p-4 ${inputClassName}`}
+                  className={`bg-customgreys-darkGrey flex-1 border-none p-4 ${inputClassName}`}
                 />
               </FormControl>
             )}
@@ -252,7 +284,7 @@ const MultiInputField: React.FC<MultiInputFieldProps> = ({
             size="icon"
             className="text-customgreys-dirtyGrey"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </Button>
         </div>
       ))}
@@ -261,9 +293,9 @@ const MultiInputField: React.FC<MultiInputFieldProps> = ({
         onClick={() => append("")}
         variant="outline"
         size="sm"
-        className="mt-2 text-customgreys-dirtyGrey"
+        className="text-customgreys-dirtyGrey mt-2"
       >
-        <Plus className="w-4 h-4 mr-2" />
+        <Plus className="mr-2 h-4 w-4" />
         Add Item
       </Button>
     </div>

@@ -1,5 +1,4 @@
-import { HydratedDocument, PopulatedDoc, Types } from "mongoose";
-import { IProperty } from "../property/property.interface";
+import { Types } from "mongoose";
 
 export interface IManager {
   cognitoId: string;
