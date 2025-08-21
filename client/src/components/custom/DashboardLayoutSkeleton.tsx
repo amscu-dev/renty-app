@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils";
-import { ProgressBar } from "react-loader-spinner";
 
 function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-50 flex h-full flex-col items-center justify-center bg-amber-600",
+        "absolute inset-0 z-50 flex h-full flex-col items-center justify-center gap-10 bg-amber-600",
         isLoading ? "" : "skeleton-dashboard",
       )}
     >
@@ -16,17 +15,11 @@ function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
         <div className="loader"></div>
       </div>
 
-      <ProgressBar
-        visible={true}
-        height="100"
-        width="100"
-        borderColor="white"
-        // barColor=""
-
-        ariaLabel="progress-bar-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
+      <div className="h-9 w-32 border-spacing-1 overflow-hidden rounded-full border-[3px] border-white p-[4px]">
+        <div className="h-full w-full overflow-hidden rounded-full">
+          <div className="animate-loading h-full rounded-full bg-[#51E5FF]"></div>
+        </div>
+      </div>
     </div>
   );
 }

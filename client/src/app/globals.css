@@ -683,3 +683,19 @@ body,
     visibility: hidden;
   }
 }
+
+.animate-loading {
+  animation: loading-dashboard 750ms linear infinite;
+}
+
+@keyframes loading-dashboard {
+  0% {
+    transform: translateX(-100%);
+  }
+  90% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

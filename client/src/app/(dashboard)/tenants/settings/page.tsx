@@ -1,27 +1,41 @@
 "use client";
 
 import SettingsForm from "@/components/custom/SettingsForm";
+import { useAuthTenant } from "@/hooks/useAuthType";
 import {
   useGetAuthUserQuery,
   useUpdateTenantSettingsMutation,
 } from "@/state/api";
-import React from "react";
+import { signOut } from "aws-amplify/auth";
+import React, { useEffect } from "react";
 
 const TenantSettings = () => {
-  const { data: authUser, isLoading } = useGetAuthUserQuery();
+  const { data: authTenant, isLoading } = useAuthTenant();
   const [updateTenant] = useUpdateTenantSettingsMutation();
-  console.log(authUser);
+  useEffect(() => {
+    if (!isLoading && !authTenant) {
+      (async () => {
+        try {
+          await signOut();
+        } finally {
+          window.location.href = "/";
+        }
+      })();
+    }
+  }, [isLoading, authTenant]);
+
   if (isLoading) return <>Loading...</>;
+  if (!authTenant) return <>Signing out…</>;
 
   const initialData = {
-    name: authUser?.userInfo.data.name,
-    email: authUser?.userInfo.data.email,
-    phoneNumber: authUser?.userInfo.data.phoneNumber,
+    name: authTenant?.userInfo.data.name,
+    email: authTenant?.userInfo.data.email,
+    phoneNumber: authTenant?.userInfo.data.phoneNumber,
   };
 
   const handleSubmit = async (data: typeof initialData) => {
     await updateTenant({
-      cognitoId: authUser?.cognitoInfo?.userId as string,
+      cognitoId: authTenant?.cognitoInfo?.userId as string,
       ...data,
     });
   };

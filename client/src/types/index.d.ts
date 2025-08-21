@@ -2,6 +2,7 @@ import { LucideIcon } from "lucide-react";
 import { AuthUser } from "aws-amplify/auth";
 import { Manager, Tenant, Property, Application } from "./tenant";
 import { MotionProps as OriginalMotionProps } from "framer-motion";
+import { IManager } from "./manager";
 
 declare module "framer-motion" {
   interface MotionProps extends OriginalMotionProps {
@@ -130,11 +131,54 @@ declare global {
     userType: "manager" | "tenant";
   }
 
-  interface User {
-    cognitoInfo: AuthUser;
-    userInfo: Tenant | Manager;
-    userRole: JsonObject | JsonPrimitive | JsonArray;
+  type ResponseAPI<T> = {
+    data: T;
+    meta: { createdAt?: string; updatedAt?: string };
+    status: "success";
+    statusCode: number;
+  };
+
+  interface IManager {
+    cognitoId: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    managedProperties: string[];
+    _id: string;
   }
+  interface ITenant {
+    cognitoId: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    applications: string[];
+    leases: string[];
+    favorites: string[];
+    properties: string[];
+    _id: string;
+  }
+
+  type PartialTenantWithID = Partial<Omit<ITenant, "_id" | "cognitoId">> & {
+    _id: string;
+    cognitoId: string;
+  };
+  type PartialManagerWithID = Partial<Omit<IManager, "_id" | "cognitoId">> & {
+    _id: string;
+    cognitoId: string;
+  };
+  interface TenantUser {
+    userRole: "tenant";
+    cognitoInfo: AuthUser;
+    userInfo: ResponseAPI<ITenant>;
+  }
+
+  interface ManagerUser {
+    userRole: "manager";
+    cognitoInfo: AuthUser;
+    userInfo: ResponseAPI<IManager>;
+  }
+
+  type User = TenantUser | ManagerUser;
 }
 
 export {};

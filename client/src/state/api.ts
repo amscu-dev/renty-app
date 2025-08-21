@@ -1,13 +1,23 @@
 import { createNewUserInDatabase, withToast } from "@/lib/utils";
-import { IManager } from "@/types/manager";
-import { ITenant } from "@/types/tenant";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+  QueryReturnValue,
+} from "@reduxjs/toolkit/query/react";
 import {
   type AuthSession,
   type AuthUser,
   fetchAuthSession,
   getCurrentUser,
 } from "aws-amplify/auth";
+
+type ApiQrv<T> = QueryReturnValue<
+  ResponseAPI<T>,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta
+>;
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -31,35 +41,58 @@ export const api = createApi({
           const { idToken } = session.tokens ?? {};
           const user: AuthUser = await getCurrentUser();
           // în Cognito, custom attributes definite pentru un utilizator apar doar în ID Token, nu în Access Token.
-          const userRole = idToken?.payload["custom:role"] as string;
+          const userRole = idToken?.payload["custom:role"] as
+            | "manager"
+            | "tenant";
+
           const endpoint =
             userRole === "manager"
               ? `/managers/${user.userId}`
               : `/tenants/${user.userId}`;
-          console.log(session);
-          console.log(user);
-          let userDetailsResponse = await fetchWithBQ(endpoint);
-          console.log(userDetailsResponse);
-          // if user doesn`t exist create new user
-          if (
-            userDetailsResponse.error &&
-            userDetailsResponse.error.status === 404
-          ) {
-            userDetailsResponse = await createNewUserInDatabase(
-              user,
-              idToken,
-              userRole,
-              fetchWithBQ,
-            );
-          }
 
-          return {
-            data: {
-              cognitoInfo: { ...user },
-              userInfo: userDetailsResponse.data as ITenant & { _id: string },
-              userRole,
-            },
-          };
+          if (userRole === "manager") {
+            let res = (await fetchWithBQ(endpoint)) as ApiQrv<IManager>;
+            if (res.error?.status === 404) {
+              res = (await createNewUserInDatabase(
+                user,
+                idToken,
+                userRole,
+                fetchWithBQ,
+              )) as ApiQrv<IManager>;
+            }
+            if (res.error || !res.data)
+              return { error: res.error ?? { status: 500, data: "No data" } };
+
+            return {
+              data: {
+                userRole: "manager",
+                cognitoInfo: user,
+                userInfo: res.data, // ResponseAPI<IManagerResponse>
+              },
+              meta: res.meta,
+            };
+          } else {
+            let res = (await fetchWithBQ(endpoint)) as ApiQrv<ITenant>;
+            if (res.error?.status === 404) {
+              res = (await createNewUserInDatabase(
+                user,
+                idToken,
+                userRole,
+                fetchWithBQ,
+              )) as ApiQrv<ITenant>;
+            }
+            if (res.error || !res.data)
+              return { error: res.error ?? { status: 500, data: "No data" } };
+
+            return {
+              data: {
+                userRole: "tenant",
+                cognitoInfo: user,
+                userInfo: res.data, // ResponseAPI<ITenantResponse>
+              },
+              meta: res.meta,
+            };
+          }
         } catch (error: any) {
           return { error: error.message || "Could not fetch user data" };
         }
