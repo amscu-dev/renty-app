@@ -11,26 +11,46 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
+import { cleanParams, cn } from "@/lib/utils";
 import { useGetAuthUserQuery } from "@/state/api";
-import { useAppSelector } from "@/state/redux";
+import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { signOut } from "aws-amplify/auth";
 import { Bell, MessageCircle, Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RotatingLines } from "react-loader-spinner";
+import SearchAutocomplete from "./SearchAutocomplete";
+import { useState } from "react";
+import { FiltersState, setFilters } from "@/state";
 
 function Navbar() {
   const isNavbarSearchVisible = useAppSelector(
     (state) => state.global.isNavbarSearchVisible,
   );
-
-  const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery();
   const router = useRouter();
+  const filters = useAppSelector((state) => state.global.filters);
+  const [localFilters, setLocalFilters] = useState(filters);
+  const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery();
+  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const isDashboardPage =
     pathname.includes("/managers") || pathname.includes("/tenants");
+  const isSearchPage = pathname.includes("/search");
+  const updateURL = (newFilters: FiltersState) => {
+    const cleanFilters = cleanParams(newFilters);
+    const updatedSearchParams = new URLSearchParams();
+
+    Object.entries(cleanFilters).forEach(([key, value]) => {
+      updatedSearchParams.set(
+        key,
+        Array.isArray(value) ? value.join(",") : value.toString(),
+      );
+    });
+
+    router.push(`search?${updatedSearchParams.toString()}`);
+  };
+
   const handleSignOut = async () => {
     await signOut();
     // Next.js, router.push("/") (din useRouter) nu face un refresh complet al paginii, ci o navigare client-side (SPA navigation).
@@ -39,12 +59,27 @@ function Navbar() {
     // Reset complet al aplicației (ștergere store în memorie, reîncărcare scripts, styles, etc.) → folosești:
     window.location.href = "/";
   };
+  const handleClickSearch = () => {
+    dispatch(setFilters(localFilters));
+    updateURL(localFilters);
+  };
+  const handleLocationSearch = (payload: {
+    location: string;
+    coordinates: [number, number];
+  }) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      location: payload.location,
+      coordinates: payload.coordinates,
+      destroySearch: true,
+    }));
+  };
   return (
     <header className="fixed top-[5px] left-0 z-30 w-full px-7">
       <nav
         className={cn(
           "flex h-[58px] w-full items-center justify-between gap-4 rounded-full border-b-[0.5px] border-orange-900 px-9 py-3 text-white shadow-xl",
-          isDashboardPage ? "bg-slate-900" : "nav-blur",
+          isDashboardPage || isSearchPage ? "bg-slate-900" : "nav-blur",
         )}
       >
         <div className="mr-2 flex items-center gap-4 md:gap-6">
@@ -55,7 +90,7 @@ function Navbar() {
           )}
           <Link
             href="/"
-            className="hover:!text-primary-300 group cursor-pointer"
+            className="hover:!text-primary-300 group duration- transform-gpu cursor-pointer rounded-lg p-1 transition-all"
             scroll={false}
           >
             <div className="flex items-center gap-3">
@@ -109,28 +144,16 @@ function Navbar() {
             speed={3}
           />
         )}
-        {isNavbarSearchVisible && !isDashboardPage && (
-          <div
-            className={`flex items-center justify-center ${isNavbarSearchVisible && "search-navbar"} relative hidden sm:flex sm:w-xs md:w-md lg:w-2xl`}
-          >
-            <Input
-              type="text"
-              // value=""
-
-              // onChange={() => {}}
-
-              placeholder="Search by city, neighborhood or address"
-              className="w-full rounded-full border-none bg-white px-4 font-light sm:text-sm lg:text-base"
-            />
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="transform-translate absolute right-1 size-8 rounded-full bg-orange-600 p-0 text-white hover:bg-orange-600/75 hover:text-white active:scale-90"
-            >
-              <Search />
-            </Button>
-          </div>
+        {isNavbarSearchVisible && !isDashboardPage && !isSearchPage && (
+          <SearchAutocomplete
+            showLabel={false}
+            defaultValue={""}
+            placeholder="Search your desired location"
+            onSearchButtonClick={handleClickSearch}
+            onValueChange={handleLocationSearch}
+            containerClassName={`${isNavbarSearchVisible && "search-navbar"} hidden sm:block sm:w-xs md:w-md lg:w-2xl bg-white rounded-full`}
+            inputClassName="rounded-full text-slate-800"
+          />
         )}
         {authLoading ? (
           <RotatingLines
@@ -155,9 +178,9 @@ function Navbar() {
                 </div>
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 focus:outline-none">
+                  <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 rounded-full focus:outline-none">
                     <Avatar>
-                      <AvatarImage src={authUser.userInfo?.image} />
+                      {/* <AvatarImage src={authUser.userInfo?.image} /> */}
                       <AvatarFallback className="border-2 border-white bg-orange-600">
                         {authUser.userRole?.[0].toUpperCase()}
                       </AvatarFallback>
@@ -207,18 +230,18 @@ function Navbar() {
             ) : (
               // AUTH BUTTON
               <>
-                <Link href="/signin">
+                <Link href="/signin" tabIndex={-1}>
                   <Button
                     variant="outline"
-                    className="hover:text-primary-700 transform-gpu cursor-pointer rounded-lg border-white bg-transparent text-white transition-colors duration-200 ease-linear hover:bg-white"
+                    className="hover:text-primary-700 transform-gpu cursor-pointer rounded-lg border-white bg-transparent text-white transition-all duration-150 ease-linear hover:bg-white"
                   >
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/signup" tabIndex={-1}>
                   <Button
                     variant="secondary"
-                    className="hover:text-primary-700 transform-gpu cursor-pointer rounded-lg border-white bg-orange-600 text-white transition-colors duration-200 ease-linear hover:bg-white"
+                    className="hover:text-primary-700 transform-gpu cursor-pointer rounded-lg border-white bg-orange-600 text-white transition-all duration-150 ease-linear hover:bg-white"
                   >
                     Sign Up
                   </Button>

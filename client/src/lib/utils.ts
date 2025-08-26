@@ -48,8 +48,9 @@ export function cleanParams(params: Record<string, any>): Record<string, any> {
   return Object.fromEntries(
     Object.entries(params).filter(
       (
-        [_, value], // eslint-disable-line @typescript-eslint/no-unused-vars
+        [index, value], // eslint-disable-line @typescript-eslint/no-unused-vars
       ) =>
+        index !== "destroySearch" &&
         value !== undefined &&
         value !== "any" &&
         value !== "" &&
@@ -71,7 +72,8 @@ export const withToast = async <T>(
 
   try {
     const result = await mutationFn;
-    if (success) toast.success(success);
+    console.log(result);
+    if (result) toast.success(success);
     return result;
   } catch (err) {
     if (error) toast.error(error);

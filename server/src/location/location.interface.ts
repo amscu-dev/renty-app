@@ -1,5 +1,4 @@
-import { HydratedDocument, PopulatedDoc } from "mongoose";
-import { IProperty } from "../property/property.interface";
+import { Types } from "mongoose";
 
 export interface ILocation {
   address: string;
@@ -14,7 +13,7 @@ export interface ILocation {
       longitude: number;
     };
   };
-  properties: PopulatedDoc<HydratedDocument<IProperty>>;
+  properties: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

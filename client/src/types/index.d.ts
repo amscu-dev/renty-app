@@ -97,7 +97,7 @@ declare global {
   }
 
   interface CardProps {
-    property: Property;
+    property: IProperty;
     isFavorite: boolean;
     onFavoriteToggle: () => void;
     showFavoriteButton?: boolean;
@@ -105,7 +105,7 @@ declare global {
   }
 
   interface CardCompactProps {
-    property: Property;
+    property: IProperty;
     isFavorite: boolean;
     onFavoriteToggle: () => void;
     showFavoriteButton?: boolean;
@@ -153,7 +153,7 @@ declare global {
     phoneNumber: string;
     applications: string[];
     leases: string[];
-    favorites: string[];
+    favorites: IProperty[];
     properties: string[];
     _id: string;
   }
@@ -179,6 +179,50 @@ declare global {
   }
 
   type User = TenantUser | ManagerUser;
+
+  export interface ILocation {
+    address: string;
+    city: string;
+    state?: string;
+    country: string;
+    postalCode: string;
+    coordinates: {
+      type: string;
+      coordinates: [number, number];
+    };
+    properties: PopulatedDoc<HydratedDocument<IProperty>>;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+  export interface IProperty {
+    _id: string;
+    name: string;
+    description: string;
+    pricePerMonth: number;
+    securityDeposit: number;
+    applicationFee: number;
+    amenities: AmenityEnum[];
+    highlights: HighlightEnum[];
+    beds: number;
+    baths: number;
+    squareFeet: number;
+    propertyType: PropertyTypeEnum;
+    isPetsAllowed: boolean;
+    postedDate: Date;
+    isParkingIncluded: boolean;
+    photoUrls: string[];
+    averageRating: number;
+    numberOfReviews: number;
+    managerCognitoId: string;
+    manager: string;
+    location: ILocation;
+    applications: string[];
+    leases: string[];
+    favoritedBy: string[];
+    tenants: string[];
+    createdAt: Date;
+    updatedAt: Date;
+  }
 }
 
 export {};

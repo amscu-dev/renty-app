@@ -1,4 +1,4 @@
-import { createNewUserInDatabase, withToast } from "@/lib/utils";
+import { cleanParams, createNewUserInDatabase, withToast } from "@/lib/utils";
 import {
   createApi,
   fetchBaseQuery,
@@ -12,6 +12,8 @@ import {
   fetchAuthSession,
   getCurrentUser,
 } from "aws-amplify/auth";
+import { FiltersState } from ".";
+import { toast } from "sonner";
 
 type ApiQrv<T> = QueryReturnValue<
   ResponseAPI<T>,
@@ -22,7 +24,7 @@ type ApiQrv<T> = QueryReturnValue<
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    prepareHeaders: async (headers) => {
+    prepareHeaders: async (headers, _api) => {
       const session: AuthSession = await fetchAuthSession();
       const { idToken } = session.tokens ?? {};
       if (idToken) {
@@ -30,9 +32,10 @@ export const api = createApi({
       }
       return headers;
     },
+    timeout: 60000,
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Tenants"],
+  tagTypes: ["Managers", "Tenants", "Properties", "PropertyDetails"],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraOptions, fetchWithBQ) => {
@@ -98,23 +101,7 @@ export const api = createApi({
         }
       },
     }),
-    updateTenantSettings: build.mutation<
-      ITenant,
-      { cognitoId: string } & Partial<ITenant>
-    >({
-      query: ({ cognitoId, ...updatedTenant }) => ({
-        url: `tenants/${cognitoId}`,
-        method: "PUT",
-        body: updatedTenant,
-      }),
-      invalidatesTags: (result) => [{ type: "Tenants", id: result?.cognitoId }],
-      async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
-          success: "Settings updated successfully!",
-          error: "Failed to update settings.",
-        });
-      },
-    }),
+
     updateManagerSettings: build.mutation<
       IManager,
       { cognitoId: string } & Partial<IManager>
@@ -134,6 +121,126 @@ export const api = createApi({
         });
       },
     }),
+
+    // property related endpoints
+    getProperties: build.query<
+      ResponseAPI<IProperty[]>,
+      Partial<FiltersState> & { favoriteIds?: number[] }
+    >({
+      query: (filters) => {
+        const params = cleanParams({
+          location: filters.location,
+          priceMin: filters.priceRange?.[0],
+          priceMax: filters.priceRange?.[1],
+          beds: filters.beds,
+          baths: filters.baths,
+          propertyType: filters.propertyType,
+          squareFeetMin: filters.squareFeet?.[0],
+          squareFeetMax: filters.squareFeet?.[1],
+          amenities: filters.amenities?.join(","),
+          // availableFrom: filters.availableFrom,
+          favoriteIds: filters.favoriteIds?.join(","),
+          latitude: filters.coordinates?.[1],
+          longitude: filters.coordinates?.[0],
+        });
+
+        return { url: "properties", params };
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ _id: id }) => ({
+                type: "Properties" as const,
+                id,
+              })),
+              { type: "Properties", id: "LIST" },
+            ]
+          : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          error: "Failed to load properties",
+        });
+      },
+    }),
+    getProperty: build.query<IProperty, number>({
+      query: (id) => `properties/${id}`,
+      transformResponse: (resp: ResponseAPI<IProperty>) => resp.data,
+      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          error: "Failed to load property details.",
+        });
+      },
+    }),
+    // tenant related endpoints
+    getTenant: build.query<ITenant, string>({
+      query: (cognitoId) => `tenants/${cognitoId}`,
+      transformResponse: (resp: ResponseAPI<ITenant>) => resp.data,
+      providesTags: (result) => [{ type: "Tenants", id: result?._id }],
+      async onQueryStarted(_, { queryFulfilled }) {},
+    }),
+
+    updateTenantSettings: build.mutation<
+      ITenant,
+      { cognitoId: string } & Partial<ITenant>
+    >({
+      query: ({ cognitoId, ...updatedTenant }) => ({
+        url: `tenants/${cognitoId}`,
+        method: "PUT",
+        body: updatedTenant,
+      }),
+      invalidatesTags: (result) => [{ type: "Tenants", id: result?.cognitoId }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Settings updated successfully!",
+          error: "Failed to update settings.",
+        });
+      },
+    }),
+
+    addFavoriteProperty: build.mutation<
+      ITenant,
+      { cognitoId: string; propertyId: string }
+    >({
+      query: ({ cognitoId, propertyId }) => ({
+        url: `tenants/${cognitoId}/favorites/${propertyId}`,
+        method: "POST",
+      }),
+      transformResponse: (resp: ResponseAPI<ITenant>) => resp.data,
+      invalidatesTags: (result) => [
+        { type: "Tenants", id: result?._id },
+        { type: "Properties", id: "LIST" },
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Adding to your favorites…",
+          success: () => `Property added to your favorites!`,
+          error: "Couldn't add to favorites. Please try again.",
+        });
+      },
+    }),
+
+    removeFavoriteProperty: build.mutation<
+      ITenant,
+      { cognitoId: string; propertyId: string }
+    >({
+      query: ({ cognitoId, propertyId }) => ({
+        url: `tenants/${cognitoId}/favorites/${propertyId}`,
+        method: "DELETE",
+      }),
+      transformResponse: (resp: ResponseAPI<ITenant>) => resp.data,
+      invalidatesTags: (result) => [
+        { type: "Tenants", id: result?._id },
+        { type: "Properties", id: "LIST" },
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Removing from your favorites…",
+          success: () => `Property removed from your favorites!`,
+          error: "Couldn't remove from favorites. Please try again.",
+        });
+      },
+    }),
   }),
 });
 
@@ -141,4 +248,9 @@ export const {
   useGetAuthUserQuery,
   useUpdateTenantSettingsMutation,
   useUpdateManagerSettingsMutation,
+  useGetPropertiesQuery,
+  useGetPropertyQuery,
+  useAddFavoritePropertyMutation,
+  useRemoveFavoritePropertyMutation,
+  useGetTenantQuery,
 } = api;

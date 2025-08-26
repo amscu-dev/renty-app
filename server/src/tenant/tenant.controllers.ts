@@ -76,6 +76,7 @@ export const getTenant = catchAsync<AuthenticatedRequest>(
 
     // Get Tenant From DB
     const tenant = await Tenant.findOne({ cognitoId })
+      .populate("favorites")
       .select("-__v -updatedAt")
       .lean();
 
