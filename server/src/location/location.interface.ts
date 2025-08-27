@@ -14,6 +14,7 @@ export interface ILocation {
     };
   };
   properties: Types.ObjectId;
+  fullAddress: string;
   createdAt: Date;
   updatedAt: Date;
 }

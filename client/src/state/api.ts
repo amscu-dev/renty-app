@@ -35,7 +35,13 @@ export const api = createApi({
     timeout: 60000,
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Tenants", "Properties", "PropertyDetails"],
+  tagTypes: [
+    "Managers",
+    "Tenants",
+    "Properties",
+    "PropertyDetails",
+    "Applications",
+  ],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraOptions, fetchWithBQ) => {
@@ -162,7 +168,7 @@ export const api = createApi({
         });
       },
     }),
-    getProperty: build.query<IProperty, number>({
+    getProperty: build.query<IProperty, string>({
       query: (id) => `properties/${id}`,
       transformResponse: (resp: ResponseAPI<IProperty>) => resp.data,
       providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
@@ -241,6 +247,24 @@ export const api = createApi({
         });
       },
     }),
+    createApplication: build.mutation<
+      ResponseAPI<Required<UpdateIApplication>>,
+      IApplication
+    >({
+      query: (body) => ({
+        url: `applications`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Requesting your application!",
+          success: () => `Application created successfully!`,
+          error: "Failed to create applications.",
+        });
+      },
+    }),
   }),
 });
 
@@ -253,4 +277,5 @@ export const {
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,
   useGetTenantQuery,
+  useCreateApplicationMutation,
 } = api;

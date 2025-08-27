@@ -7,7 +7,7 @@ export enum ApplicationStatus {
 }
 
 export interface IApplication {
-  applicationDate: Date;
+  applicationDate: string;
   status: ApplicationStatus;
   name: string;
   email: string;
@@ -15,7 +15,7 @@ export interface IApplication {
   message?: string;
   tenantCognitoId: string;
   lease: Types.ObjectId;
-  property: Types.ObjectId;
+  propertyId: Types.ObjectId;
   tenant: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;

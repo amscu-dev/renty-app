@@ -112,7 +112,9 @@ function Map() {
         <div
           className={cn(
             "pointer-events-none absolute inset-0 flex items-center justify-center rounded-3xl blur-sm",
-            isMapReady ? `bg-white/30` : `bg-[${MAP_PLACEHOLDER_BG}] bg-cover`,
+            isMapReady
+              ? `bg-white/30`
+              : `bg-[url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wEEEAAYABgAGAAYABkAGAAaAB0AHQAaACUAKAAjACgAJQA2ADIALgAuADIANgBSADsAPwA7AD8AOwBSAH0ATgBbAE4ATgBbAE4AfQBuAIYAbQBlAG0AhgBuAMYAnACKAIoAnADGAOUAwQC2AMEA5QEWAPgA+AEWAV4BTAFeAckByQJmEQAYABgAGAAYABkAGAAaAB0AHQAaACUAKAAjACgAJQA2ADIALgAuADIANgBSADsAPwA7AD8AOwBSAH0ATgBbAE4ATgBbAE4AfQBuAIYAbQBlAG0AhgBuAMYAnACKAIoAnADGAOUAwQC2AMEA5QEWAPgA+AEWAV4BTAFeAckByQJm/8IAEQgAdwDIAwEiAAIRAQMRAf/EADAAAQADAQEBAAAAAAAAAAAAAAABAgMFBAYBAQADAQAAAAAAAAAAAAAAAAABAgME/9oADAMBAAIQAxAAAAD6qoV0CJgECIsKoqXiKl4zuTNJNJyuaM4NFBZAi/h9sxMViJspYsgSiSFblK6jJoKLSUaCIvBSNIMWg4V6ujk9nq5Kt+249K37Liyjvx4/bTXONYiYsBIpNhCaEwkWCFh86OjkAAAt2+F1aa+qLePLb2MtC0ZDWlxjvS6DPVOd4zNQfPDo5AAAHa4sxbt4eHGmnW9PA6sT6FZppa1LlLRU1UFprJLBNeIlvzQmAABMSAJgdL1cPSmvaZa5azW0Jis6BWQkfPDo5LVAB7PHZM16tK35otmBCRfrcZF/oHk9mO9LSiYrYED58dHIAAB6/UVv5PKTATUAB0yLe8YdKAA//8QALBAAAQMDAwMDBAIDAAAAAAAAAQACEQMSIQQQMTBBURMgYSJScZEUQiMygf/aAAgBAQABPwBXHi0oF5OZbtO8lFxVzlcfJVzvKud5VzvKvP3K53kq93lBx8q4+VJQO0q5SVKA7nn2kbnKIMbmeyAIEe0FSvrum7HhEwCSgQ4SNpb8+2SoU+wgFFp3GSfhY9gCIjYutheoqGra6G1MeCpGESgZwgDOUSpUobR3ACE942/MKAeygKFA8e0hEQhsHvaQQ4ghU9WRh7Z+UNRRP9wg4HIMhEgd0ajJy9v7TalNxgPbP5XCc4NySvUZBM4mE2sw8FB7SSAVzsUMQIcVnsFlFAfJRF3crLfJQM8ghQPayq+nNpiUc870NRcbTJO5HJ6AqMJIk/owi6cAFA/CBnptcWODhyCmw8B2MhQApB7+3KqEhhc2bm5AVIueJqNI+No2h0qUCHAEdLROJpEeDtralSlRvZIAIvLQC4D4BVE1DRpGqAKloujyiYBK9an5P6QqtJaATkxwgEcKAVmMcwqZrQRUaAfIOxzIVKm5g+p9xnlQBwOlQNL02BmMJ77P6uK/lMgkiYIkJupY7hpwJ2L2fcECI5EIFrh9Lhx2UGBOwKnrnUVSwMLpEyiSSSeTtpqxcyHYIVtOcNCIbxbyZTA0f6tAnYztcACScBMex7bmukJskZBB2qVrHWBjnOtnHWa5zctMKjqTaLxKYQ5rXAzsSPIQ3p02MLrREne5l1si7ryfKpVX0nS3/oVGs2s2RyOQrQVGE4RsMBfV8bQJmBO5icTHtZpRVZcyqPwQnMeww5pHQp1HU3hzVT1FKoYBzsRIUEbwfuXboBzhwSFpHmrRc2p9QB7rU6VgaX0258Do6bUB7Q17hf7u3R0+p9EFpEtQ1zCYghaprGvxyc9HSagu/wAb+ex93//EACARAQACAgEEAwAAAAAAAAAAAAEAAhEwIBITITFBUWH/2gAIAQIBAT8A2om5oM7f7O2fcRNtzxnbYzCktXHLDoaT1oc/DOrzh4NRiJoajK+jhYyPD//EACIRAQABAwMEAwAAAAAAAAAAAAECABEwAxIgEyExUTJBYf/aAAgBAwEBPwDKI+MxqSK6v5XVfVCOXTe9ssZbXxTqeqhPdy3GA1PF6EcBb7K2drnCM2NCJcwE5FS+TwgpI4f/2Q==")] bg-cover`,
           )}
         ></div>
       )}
@@ -128,14 +130,16 @@ const createPropertyMarker = (property: IProperty, map: mapboxgl.Map) => {
     number,
     number,
   ];
-
+  const imgUrl = property.photoUrls[0];
   const marker = new mapboxgl.Marker()
     .setLngLat([lng, lat])
     .setPopup(
       new mapboxgl.Popup().setHTML(
         `
         <div class="marker-popup">
-          <div class="marker-popup-image"></div>
+         
+          <img src="${imgUrl}" class="marker-popup-image" alt="" />
+          
           <div>
             <a href="/search/${property._id}" target="_blank" class="marker-popup-title">${property.name}</a>
             <p class="marker-popup-price">

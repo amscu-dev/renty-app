@@ -157,7 +157,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
       );
     }
     // 05. If all good extract lat, lang from geocodingResponse
-    const { lat, lon } = geocodingResponse.data[0];
+    const { lat, lon, display_name } = geocodingResponse.data[0];
 
     // 06. Upload Images to S3 Bucket.
     // 06.01 Costruct Object Command
@@ -167,6 +167,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
     let location = new Location({
       address,
       city,
+      fullAddress: display_name,
       state,
       country,
       postalCode,

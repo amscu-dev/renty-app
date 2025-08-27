@@ -59,6 +59,7 @@ const Card = ({
               href={propertyLink}
               className="hover:text-blue-600 hover:underline"
               scroll={false}
+              target="_blank"
             >
               {property.name}
             </Link>

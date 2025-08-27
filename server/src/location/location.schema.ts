@@ -12,6 +12,7 @@ const locationSchema: Schema<ILocation> = new Schema(
         "Property address cannot have more than 100 characters.",
       ],
     },
+    fullAddress: String,
     city: {
       type: String,
       required: [true, "A property must have a valid city."],

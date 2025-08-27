@@ -79,7 +79,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
           ), // 1 year from today
           rent: property.pricePerMonth,
           deposit: property.securityDeposit,
-          property: property._id,
+          propertyId: property._id,
           tenant: tenant._id,
           tenantCognitoId: tenantCognitoId,
           // TO COMPLETE WITH APP ID

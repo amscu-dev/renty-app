@@ -13,7 +13,7 @@ const applicationSchema: Schema<IApplication> = new Schema(
       },
     },
     applicationDate: {
-      type: Date,
+      type: String,
       required: [true, "Application date is required."],
     },
     name: {
@@ -32,7 +32,7 @@ const applicationSchema: Schema<IApplication> = new Schema(
       trim: true,
     },
     message: { type: String, trim: true },
-    property: {
+    propertyId: {
       type: Schema.Types.ObjectId,
       ref: "Property",
       required: [true, "Property reference is required."],

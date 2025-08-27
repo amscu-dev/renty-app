@@ -61,33 +61,34 @@ declare global {
   }
 
   interface PropertyOverviewProps {
-    propertyId: number;
+    propertyId: string;
   }
 
   interface ApplicationModalProps {
     isOpen: boolean;
     onClose: () => void;
-    propertyId: number;
+    propertyId: string;
   }
 
   interface ContactWidgetProps {
     onOpenModal: () => void;
+    propertyId: string;
   }
 
   interface ImagePreviewsProps {
-    images: string[];
+    propertyId: string;
   }
 
   interface PropertyDetailsProps {
-    propertyId: number;
+    propertyId: string;
   }
 
   interface PropertyOverviewProps {
-    propertyId: number;
+    propertyId: string;
   }
 
   interface PropertyLocationProps {
-    propertyId: number;
+    propertyId: string;
   }
 
   interface ApplicationCardProps {
@@ -193,6 +194,7 @@ declare global {
     properties: PopulatedDoc<HydratedDocument<IProperty>>;
     createdAt: Date;
     updatedAt: Date;
+    fullAddress: string;
   }
   export interface IProperty {
     _id: string;
@@ -222,6 +224,35 @@ declare global {
     tenants: string[];
     createdAt: Date;
     updatedAt: Date;
+  }
+  export enum ApplicationStatus {
+    Pending = "Pending",
+    Denied = "Denied",
+    Approved = "Approved",
+  }
+
+  export interface IApplication {
+    applicationDate: string;
+    status: ApplicationStatus;
+    propertyId: string;
+    tenantCognitoId: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    message?: string;
+  }
+  export interface UpdateIApplication {
+    _id: string;
+    applicationDate?: string;
+    status?: ApplicationStatus;
+    propertyId?: string;
+    tenantCognitoId?: string;
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    message?: string;
+    lease?: string;
+    tenant?: string;
   }
 }
 
