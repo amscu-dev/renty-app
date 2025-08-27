@@ -45,7 +45,6 @@ function ConfirmSignUp({ email }: { email: string }) {
     setCognitoError("");
     try {
       const response = await handleConfirmSignUp({ email, code });
-      console.log(response);
       if (
         response.nextStep.signUpStep === "COMPLETE_AUTO_SIGN_IN" &&
         response.isSignUpComplete

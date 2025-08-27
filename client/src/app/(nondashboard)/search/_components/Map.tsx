@@ -7,7 +7,6 @@ import { useAppSelector } from "@/state/redux";
 import { useGetPropertiesQuery } from "@/state/api";
 import { cn } from "@/lib/utils";
 import NoData from "@/components/custom/NoData";
-import { MAP_PLACEHOLDER_BG } from "@/lib/constants";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 

@@ -76,8 +76,15 @@ export const getTenant = catchAsync<AuthenticatedRequest>(
 
     // Get Tenant From DB
     const tenant = await Tenant.findOne({ cognitoId })
-      .populate("favorites")
       .select("-__v -updatedAt")
+      .populate({
+        path: "favorites",
+        options: { lean: true },
+        populate: {
+          path: "location",
+          options: { lean: true },
+        },
+      })
       .lean();
 
     // IF No Tenant DENY

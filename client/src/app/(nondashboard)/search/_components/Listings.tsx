@@ -59,7 +59,7 @@ const Listings = () => {
   };
 
   // To make Loading Skeleton
-  if (isLoadingProperties || isLoadingTenant || isFetchingProperties)
+  if (isLoadingProperties || isFetchingProperties)
     return (
       <div className="flex w-full flex-col gap-5 pr-2">
         <Skeleton className="h-[20px] w-4/10 rounded-xl bg-slate-300" />

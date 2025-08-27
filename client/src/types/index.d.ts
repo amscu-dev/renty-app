@@ -113,7 +113,7 @@ declare global {
     propertyLink?: string;
   }
 
-  interface HeaderProps {
+  interface DashboardPagesHeaderProps {
     title: string;
     subtitle: string;
   }
@@ -253,6 +253,39 @@ declare global {
     message?: string;
     lease?: string;
     tenant?: string;
+  }
+
+  export interface ILease {
+    startDate: Date;
+    endDate: Date;
+    rent: number;
+    deposit: number;
+    tenantCognitoId: string;
+    tenant: string;
+    property: string;
+    application?: string;
+    payments: string[];
+    nextPaymentDate?: Date;
+    _id: string;
+  }
+
+  export enum PaymentStatus {
+    Pending = "Pending",
+    Paid = "Paid",
+    PartiallyPaid = "PartiallyPaid",
+    Overdue = "Overdue",
+  }
+
+  export interface IPayment {
+    _id: string;
+    amountDue: number;
+    amountPaid: number;
+    dueDate: Date;
+    paymentDate: Date;
+    paymentStatus: PaymentStatus;
+    lease: string;
+    createdAt: Date;
+    updatedAt: Date;
   }
 }
 

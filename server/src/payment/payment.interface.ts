@@ -1,4 +1,4 @@
-import { HydratedDocument, PopulatedDoc } from "mongoose";
+import { HydratedDocument, PopulatedDoc, Types } from "mongoose";
 import { ILease } from "../lease/lease.interface";
 
 export enum PaymentStatus {
@@ -14,7 +14,7 @@ export interface IPayment {
   dueDate: Date;
   paymentDate: Date;
   paymentStatus: PaymentStatus;
-  lease: PopulatedDoc<HydratedDocument<ILease>>;
+  lease: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

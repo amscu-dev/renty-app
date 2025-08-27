@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useGetAuthUserQuery } from "@/state/api";
 import Navbar from "@/components/custom/Navbar";
 import AppSidebar from "@/components/custom/AppSidebar";
@@ -28,7 +28,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="relative h-full">
-      <DashboardLayoutSkeleton isLoading={authLoading} />;
+      <DashboardLayoutSkeleton isLoading={authLoading} />
       <SidebarProvider>
         <div className="bg-primary-100 min-h-screen w-full px-7">
           <Navbar />

@@ -57,7 +57,7 @@ const CardCompact = ({
             </h2>
             {showFavoriteButton && (
               <button
-                className="rounded-full bg-white p-1"
+                className="cursor-pointer rounded-full bg-white p-1"
                 onClick={onFavoriteToggle}
               >
                 <Heart

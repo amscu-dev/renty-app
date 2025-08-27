@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cleanParams, cn } from "@/lib/utils";
 import { useGetAuthUserQuery } from "@/state/api";
@@ -112,7 +111,7 @@ function Navbar() {
           {isDashboardPage && authUser && (
             <Button
               variant="secondary"
-              className="bg-secondary-500 text-primary-50 hover:bg-primary-50 hover:text-primary-700 transform-gpu cursor-pointer transition-colors duration-300 md:ml-4"
+              className="text-primary-50 hover:bg-primary-50 hover:text-primary-700 transform-gpu cursor-pointer bg-orange-600 transition-colors duration-300 md:ml-4"
               onClick={() => {
                 router.push(
                   authUser.userRole?.toLowerCase() === "manager"

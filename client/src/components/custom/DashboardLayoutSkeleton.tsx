@@ -4,7 +4,7 @@ function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-50 flex h-full flex-col items-center justify-center gap-10 bg-amber-600",
+        "absolute inset-0 z-50 flex h-full flex-col items-center justify-center gap-10 bg-slate-900",
         isLoading ? "" : "skeleton-dashboard",
       )}
     >
@@ -14,10 +14,9 @@ function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
         </p>
         <div className="loader"></div>
       </div>
-
       <div className="h-9 w-32 border-spacing-1 overflow-hidden rounded-full border-[3px] border-white p-[4px]">
         <div className="h-full w-full overflow-hidden rounded-full">
-          <div className="animate-loading h-full rounded-full bg-[#51E5FF]"></div>
+          <div className="animate-loading h-full rounded-full bg-orange-600"></div>
         </div>
       </div>
     </div>
