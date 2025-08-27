@@ -6,13 +6,16 @@ export function useModality() {
       (document.documentElement.dataset.modality = "pointer");
     const setKeyboard = (e: KeyboardEvent) => {
       // consideră taste de navigare/focus
-      if (
-        e.key === "Tab" ||
-        e.key.startsWith("Arrow") ||
-        e.key === "Enter" ||
-        e.key === " "
-      ) {
-        document.documentElement.dataset.modality = "keyboard";
+
+      if (e.key) {
+        if (
+          e.key === "Tab" ||
+          e.key.startsWith("Arrow") ||
+          e.key === "Enter" ||
+          e.key === " "
+        ) {
+          document.documentElement.dataset.modality = "keyboard";
+        }
       }
     };
     window.addEventListener("mousedown", setPointer, true);

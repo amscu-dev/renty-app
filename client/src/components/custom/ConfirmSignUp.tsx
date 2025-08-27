@@ -18,6 +18,13 @@ import {
 import { cn, formatCognitoErrorMessages } from "@/lib/utils";
 import CognitoError from "./CognitoError";
 import { useRouter } from "next/navigation";
+import {
+  AuthSession,
+  AuthUser,
+  autoSignIn,
+  fetchAuthSession,
+  getCurrentUser,
+} from "aws-amplify/auth";
 
 function ConfirmSignUp({ email }: { email: string }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -38,15 +45,27 @@ function ConfirmSignUp({ email }: { email: string }) {
     setCognitoError("");
     try {
       const response = await handleConfirmSignUp({ email, code });
+      console.log(response);
       if (
-        response.nextStep.signUpStep === "DONE" &&
+        response.nextStep.signUpStep === "COMPLETE_AUTO_SIGN_IN" &&
         response.isSignUpComplete
       ) {
-        setSignupComplete(true);
-        setTimeout(() => {
-          // TO BE MODIFIED
-          router.replace("/landing");
-        }, 1000);
+        const { isSignedIn, nextStep } = await autoSignIn();
+        if (isSignedIn && nextStep.signInStep === "DONE") {
+          const session: AuthSession = await fetchAuthSession();
+          const { idToken } = session.tokens ?? {};
+          const userRole = idToken?.payload["custom:role"] as
+            | "manager"
+            | "tenant";
+          const redirectLink =
+            userRole === "manager"
+              ? `/managers/properties`
+              : `/tenants/favorites`;
+          setSignupComplete(true);
+          setTimeout(() => {
+            router.replace(redirectLink);
+          }, 1000);
+        }
       }
     } catch (error) {
       const errorMessage = formatCognitoErrorMessages(error);

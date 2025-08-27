@@ -58,8 +58,8 @@ export const createManager = catchAsync<AuthenticatedRequest>(
       email,
       phoneNumber: "",
     });
-
-    const { createdAt, ...managerData } = newManager;
+    const plainManager = newManager.toObject();
+    const { createdAt, ...managerData } = plainManager;
     // Send Info To Client
     res.status(StatusCodes.CREATED).json({
       status: "success",
@@ -96,7 +96,7 @@ export const getManager = catchAsync<AuthenticatedRequest>(
         )
       );
     const { createdAt, ...managerData } = manager;
-
+    console.log(managerData);
     // Else Send Info To Client
     res.status(StatusCodes.OK).json({
       status: "success",

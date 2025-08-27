@@ -22,6 +22,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       })();
     }
   }, [authLoading, authUser]);
+
   if (authLoading) return <DashboardLayoutSkeleton isLoading={authLoading} />;
   if (!authUser) return <>Signing out…</>;
 

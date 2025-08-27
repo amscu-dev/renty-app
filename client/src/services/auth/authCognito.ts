@@ -23,6 +23,7 @@ export async function handleSignUp({
         preferred_username: String(username),
         "custom:role": role,
       },
+      autoSignIn: true,
     },
   });
   return response;

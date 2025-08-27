@@ -1,15 +1,13 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import LandingMainPictore from "./../../../../../public/landing-5.jpg";
 import { useInView } from "react-intersection-observer";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { FiltersState, setFilters, switchSearchVisible } from "@/state";
 import SearchAutocomplete from "@/components/custom/SearchAutocomplete";
 import { useRouter } from "next/navigation";
-import { debounce } from "lodash";
 import { cleanParams } from "@/lib/utils";
-import { HERO_PLACEHOLDER_BG } from "@/lib/constants";
 
 const HeroSection = () => {
   const router = useRouter();

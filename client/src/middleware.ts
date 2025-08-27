@@ -4,6 +4,7 @@ import { authRoutes, publicRoutes } from "../routes";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
+  console.log("Hit Middleware");
   const response = NextResponse.next();
   const { nextUrl } = request;
   const user = await authenticatedUser({ request, response });

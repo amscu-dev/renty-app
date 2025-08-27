@@ -50,8 +50,8 @@ export const createTenant = catchAsync<AuthenticatedRequest>(
       email,
       phoneNumber: "",
     });
-
-    const { createdAt, ...tenantData } = newTenant;
+    const plainTenant = newTenant.toObject();
+    const { createdAt, ...tenantData } = plainTenant;
     // Send Info To Client
     res.status(StatusCodes.CREATED).json({
       status: "success",
