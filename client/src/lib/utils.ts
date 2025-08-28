@@ -70,7 +70,7 @@ export const withToast = async <T>(
 
   try {
     const result = await mutationFn;
-    console.log(result);
+
     if (result) toast.success(success);
     return result;
   } catch (err) {

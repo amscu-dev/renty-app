@@ -13,7 +13,7 @@ const Card = ({
   const [imgSrc, setImgSrc] = useState(
     property.photoUrls?.[0] || "/placeholder.jpg",
   );
-  console.log(property);
+
   return (
     <div className="mb-5 w-full overflow-hidden rounded-xl bg-white shadow-lg">
       <div className="relative">

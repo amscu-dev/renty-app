@@ -355,7 +355,7 @@ export const api = createApi({
     >({
       query: ({ id, status }) => ({
         url: `applications/${id}/status`,
-        method: "PUT",
+        method: "PATCH",
         body: { status },
       }),
       transformResponse: (resp: ResponseAPI<IApplication>) => resp.data,

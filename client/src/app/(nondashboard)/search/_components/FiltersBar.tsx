@@ -40,7 +40,6 @@ function FiltersBar() {
   const updateURL = useMemo(
     () =>
       debounce((newFilters: FiltersState) => {
-        console.log("hei there this doesnt work");
         const cleanFilters = cleanParams(newFilters);
         const updatedSearchParams = new URLSearchParams();
 

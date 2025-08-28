@@ -23,9 +23,7 @@ export async function authenticatedUser(context: NextServer.Context) {
           role: session.tokens.idToken?.payload["custom:role"],
         };
         return user;
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
   });
 }

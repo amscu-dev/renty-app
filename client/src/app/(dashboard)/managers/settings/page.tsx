@@ -29,7 +29,7 @@ const ManagerSettings = () => {
     email: authManager?.userInfo.data.email,
     phoneNumber: authManager?.userInfo.data.phoneNumber,
   };
-  console.log(initialData, authManager);
+
   const handleSubmit = async (data: typeof initialData) => {
     await updateManager({
       cognitoId: authManager?.cognitoInfo?.userId as string,

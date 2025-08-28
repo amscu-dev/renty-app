@@ -155,9 +155,7 @@ function SignUpPage() {
           <div>
             <SignUpErrorMessage
               className="flex flex-col gap-2 rounded-md bg-red-200 px-4 py-2 font-medium text-red-600"
-              onMouseDown={() => {
-                console.log("hei");
-              }}
+              onMouseDown={() => {}}
             />
           </div>
           <CustomFormField

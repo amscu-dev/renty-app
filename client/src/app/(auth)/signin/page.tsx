@@ -43,7 +43,7 @@ function SignInPage() {
     setCognitoError("");
     try {
       const response = await handleSignIn(data);
-      console.log(response);
+
       if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
         setIsAuthSuccess(true);
         setTimeout(() => {

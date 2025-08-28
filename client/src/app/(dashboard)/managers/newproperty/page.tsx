@@ -45,11 +45,7 @@ function CreateNewPropertyPage() {
       postalCode: "",
     },
   });
-  useEffect(() => {
-    if (isSuccess && data) {
-      console.log("Mutation data:", data); // <-- aici vezi datele
-    }
-  }, [isSuccess, data]);
+
   const onSubmit = async (data: PropertyFormData) => {
     if (!authUser?.cognitoInfo?.userId) throw new Error("No manager ID found");
     setError(undefined);
@@ -75,7 +71,6 @@ function CreateNewPropertyPage() {
         router.replace(`/search/${created._id}`);
       }
     } catch (error) {
-      console.log(error);
       if (typeof error === "object" && error && "status" in error) {
         if (error.status === 400) {
           setError("Please provided a valid address for your location.");
