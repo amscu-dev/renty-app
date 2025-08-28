@@ -55,7 +55,10 @@ function ManagerPropertiesPage() {
         ))}
       </div>
       {(!managerProperties || managerProperties.length === 0) && (
-        <NoData message="You don&lsquo;t manage any properties" />
+        <NoData
+          message="You don&lsquo;t have any properties under management. Please feel free to post your first residence."
+          containerClassName="mt-48"
+        />
       )}
     </div>
   );

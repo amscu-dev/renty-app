@@ -5,9 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 import { cleanParams, cn, formatEnumString } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 import { AmenityIcons, PropertyTypeIcons } from "@/lib/constants";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -140,6 +138,7 @@ function FiltersFull() {
               localFilters.priceRange[0] ?? 0,
               localFilters.priceRange[1] ?? 10000,
             ]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onValueChange={(value: any) =>
               setLocalFilters((prev) => ({
                 ...prev,

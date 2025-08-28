@@ -2,13 +2,17 @@ import { checkSchema } from "express-validator";
 
 export const createApplicationValidator = checkSchema(
   {
+    propertyId: {
+      notEmpty: { errorMessage: "Property reference is required." },
+      isMongoId: { errorMessage: "Property must be a valid MongoDB ObjectId." },
+    },
     applicationDate: {
       notEmpty: { errorMessage: "Application date is required." },
       isISO8601: {
         options: { strict: true, strictSeparator: true },
         errorMessage: "Application date must be a valid ISO-8601 date.",
       },
-      toDate: true,
+      // toDate: true,
       // ex: "2025-08-16T10:00:00Z" -> Date
     },
     name: {
@@ -45,10 +49,6 @@ export const createApplicationValidator = checkSchema(
         options: { max: 2000 },
         errorMessage: "Message cannot exceed 2000 characters.",
       },
-    },
-    property: {
-      notEmpty: { errorMessage: "Property reference is required." },
-      isMongoId: { errorMessage: "Property must be a valid MongoDB ObjectId." },
     },
   },
   ["body"]

@@ -18,8 +18,8 @@ function SearchPage() {
   );
 
   useEffect(() => {
-    // searchParams.entries() -- return an iterator, we transform it in an array.
     const initialFilters = Array.from(searchParams.entries()).reduce(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (acc: any, [key, value]) => {
         if (key === "priceRange" || key === "squareFeet") {
           acc[key] = value.split(",").map((v) => (v === "" ? null : Number(v)));
@@ -34,7 +34,6 @@ function SearchPage() {
       {},
     );
     const cleanedFilters = cleanParams(initialFilters);
-    console.log(cleanedFilters);
     dispatch(setFilters(cleanedFilters));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (

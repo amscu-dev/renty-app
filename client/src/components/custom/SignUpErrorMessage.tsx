@@ -2,7 +2,7 @@
 import { SignUpData } from "@/lib/schemas";
 import { CircleSlash } from "lucide-react";
 import React from "react";
-import { useFormContext, useFormState } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 type SignUpErrorMessage = {
   className?: string;

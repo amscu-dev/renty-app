@@ -30,6 +30,8 @@ const ContactWidget = ({ onOpenModal, propertyId }: ContactWidgetProps) => {
       </div>
     );
   if (isError || !property) return;
+  const isOwnProperty =
+    property.managerCognitoId === authUser?.userInfo.data.cognitoId;
   return (
     <div className="border-primary-200 h-fit min-w-[300px] rounded-2xl border bg-white p-7">
       {/* Contact Property */}
@@ -47,8 +49,13 @@ const ContactWidget = ({ onOpenModal, propertyId }: ContactWidgetProps) => {
       <Button
         className="bg-primary-700 hover:bg-primary-600 w-full text-white"
         onClick={handleButtonClick}
+        disabled={isOwnProperty}
       >
-        {authUser ? "Submit Application" : "Sign In to Apply"}
+        {authUser && !isOwnProperty
+          ? "Submit Application"
+          : isOwnProperty
+            ? "You own this property"
+            : "Sign in to apply"}
       </Button>
 
       <hr className="my-4" />

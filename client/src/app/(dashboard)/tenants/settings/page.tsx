@@ -2,10 +2,7 @@
 
 import SettingsForm from "@/components/custom/SettingsForm";
 import { useAuthTenant } from "@/hooks/useAuthType";
-import {
-  useGetAuthUserQuery,
-  useUpdateTenantSettingsMutation,
-} from "@/state/api";
+import { useUpdateTenantSettingsMutation } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 import React, { useEffect } from "react";
 

@@ -1,16 +1,10 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import VerificationInput from "react-verification-input";
 import CustomAuthButton from "./CustomAuthButton";
 import { RotatingLines } from "react-loader-spinner";
-import {
-  BadgeCheck,
-  CheckCircle,
-  CheckCircle2Icon,
-  CircleCheck,
-} from "lucide-react";
+import { CheckCircle2Icon, CircleCheck } from "lucide-react";
 import {
   handleConfirmSignUp,
   handleResendSignUpVerificationCode,
@@ -18,13 +12,7 @@ import {
 import { cn, formatCognitoErrorMessages } from "@/lib/utils";
 import CognitoError from "./CognitoError";
 import { useRouter } from "next/navigation";
-import {
-  AuthSession,
-  AuthUser,
-  autoSignIn,
-  fetchAuthSession,
-  getCurrentUser,
-} from "aws-amplify/auth";
+import { AuthSession, autoSignIn, fetchAuthSession } from "aws-amplify/auth";
 
 function ConfirmSignUp({ email }: { email: string }) {
   const inputRef = useRef<HTMLInputElement | null>(null);

@@ -107,12 +107,12 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
             >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
-            <SelectContent className="w-full border-gray-200 shadow">
+            <SelectContent className="w-full border-gray-200 shadow-xl">
               {options?.map((option) => (
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  className={`hover:!text-customgreys-darkGrey cursor-pointer hover:!bg-gray-100`}
+                  className={`cursor-pointer hover:!bg-gray-100`}
                 >
                   {option.label}
                 </SelectItem>
@@ -127,7 +127,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
               checked={field.value}
               onCheckedChange={field.onChange}
               id={name}
-              className={`text-customgreys-dirtyGrey ${inputClassName}`}
+              className={`text-customgreys-dirtyGrey ${inputClassName} cursor-pointer`}
             />
             <FormLabel htmlFor={name} className={labelClassName}>
               {label}

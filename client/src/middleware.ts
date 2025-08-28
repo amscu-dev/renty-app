@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
     console.log("CASE 2");
     return Response.redirect(new URL("/managers/properties", nextUrl));
   }
-  // // CASE 3: If a tenant tries to use a route specific for a manager redirect;
+  // CASE 3: If a tenant tries to use a route specific for a manager redirect;
   if (isUserAuth && isTenant && isManagerRoute) {
     console.log("CASE 3");
     return Response.redirect(new URL("/tenants/favorites", nextUrl));

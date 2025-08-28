@@ -161,6 +161,25 @@ export const api = createApi({
         });
       },
     }),
+    createProperty: build.mutation<IProperty, FormData>({
+      query: (newProperty) => ({
+        url: `properties`,
+        method: "POST",
+        body: newProperty,
+      }),
+      transformResponse: (resp: ResponseAPI<IProperty>) => resp.data,
+      invalidatesTags: (result) => [
+        { type: "Properties", id: "LIST" },
+        { type: "Managers", id: result?.managerCognitoId },
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Register your new property...",
+          success: "Property created successfully!",
+          error: "Failed to create property.",
+        });
+      },
+    }),
     // tenant related endpoints
     getTenant: build.query<ITenant, string>({
       query: (cognitoId) => `tenants/${cognitoId}`,
@@ -198,7 +217,8 @@ export const api = createApi({
       }),
       invalidatesTags: (result) => [{ type: "Tenants", id: result?.cognitoId }],
       async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
+        toast.promise(queryFulfilled, {
+          loading: "Updating your settings!",
           success: "Settings updated successfully!",
           error: "Failed to update settings.",
         });
@@ -246,25 +266,7 @@ export const api = createApi({
         });
       },
     }),
-    // application related endpoints
-    createApplication: build.mutation<
-      ResponseAPI<Required<UpdateIApplication>>,
-      IApplication
-    >({
-      query: (body) => ({
-        url: `applications`,
-        method: "POST",
-        body: body,
-      }),
-      invalidatesTags: ["Applications"],
-      async onQueryStarted(_, { queryFulfilled }) {
-        toast.promise(queryFulfilled, {
-          loading: "Requesting your application!",
-          success: () => `Application created successfully!`,
-          error: "Failed to create applications.",
-        });
-      },
-    }),
+
     // manager related endpoints
     getManagerProperties: build.query<IProperty[], string>({
       query: (cognitoId) => `managers/${cognitoId}/properties`,
@@ -280,7 +282,7 @@ export const api = createApi({
             ]
           : [{ type: "Properties", id: "LIST" }],
       async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
+        toast.promise(queryFulfilled, {
           error: "Failed to load manager profile.",
         });
       },
@@ -298,9 +300,71 @@ export const api = createApi({
         { type: "Managers", id: result?.cognitoId },
       ],
       async onQueryStarted(_, { queryFulfilled }) {
-        await withToast(queryFulfilled, {
+        toast.promise(queryFulfilled, {
+          loading: "Updating your settings!",
           success: "Settings updated successfully!",
           error: "Failed to update settings.",
+        });
+      },
+    }),
+
+    // application related endpoints
+    createApplication: build.mutation<IApplication, CreateIApplication>({
+      query: (body) => ({
+        url: `applications`,
+        method: "POST",
+        body: body,
+      }),
+      transformResponse: (resp: ResponseAPI<IApplication>) => resp.data,
+      invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Requesting your application!",
+          success: () => `Application created successfully!`,
+          error: "Failed to create applications.",
+        });
+      },
+    }),
+    getApplications: build.query<
+      IApplication[],
+      { userId?: string; userType?: string }
+    >({
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+        if (params.userId) {
+          queryParams.append("userId", params.userId.toString());
+        }
+        if (params.userType) {
+          queryParams.append("userType", params.userType);
+        }
+
+        return `applications?${queryParams.toString()}`;
+      },
+      transformResponse: (resp: ResponseAPI<IApplication[]>) => resp.data,
+      providesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          error: "Failed to fetch applications.",
+        });
+      },
+    }),
+
+    updateApplicationStatus: build.mutation<
+      IApplication,
+      { id: string; status: string }
+    >({
+      query: ({ id, status }) => ({
+        url: `applications/${id}/status`,
+        method: "PUT",
+        body: { status },
+      }),
+      transformResponse: (resp: ResponseAPI<IApplication>) => resp.data,
+      invalidatesTags: ["Applications", "Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Updating application status!",
+          success: "Application status updated successfully!",
+          error: "Failed to update application settings.",
         });
       },
     }),
@@ -342,6 +406,7 @@ export const api = createApi({
 
 export const {
   useGetAuthUserQuery,
+  useCreatePropertyMutation,
   useGetManagerPropertiesQuery,
   useUpdateTenantSettingsMutation,
   useUpdateManagerSettingsMutation,
@@ -350,9 +415,11 @@ export const {
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,
   useGetTenantQuery,
-  useCreateApplicationMutation,
   useGetCurrentResidencesQuery,
   useGetLeasesQuery,
   useGetPropertyLeasesQuery,
   useGetPaymentsQuery,
+  useGetApplicationsQuery,
+  useUpdateApplicationStatusMutation,
+  useCreateApplicationMutation,
 } = api;

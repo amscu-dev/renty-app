@@ -14,9 +14,6 @@ export const authConfig: ResourcesConfig["Auth"] = {
       preferred_username: {
         required: true,
       },
-      // "custom:role": {
-      //   required: true,
-      // },
     },
   },
 };

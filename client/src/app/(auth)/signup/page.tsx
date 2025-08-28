@@ -5,7 +5,7 @@ import { CustomFormField } from "@/components/custom/FormField";
 import SignUpErrorMessage from "@/components/custom/SignUpErrorMessage";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { AuthData, authSchema, SignUpData, signUpSchema } from "@/lib/schemas";
+import { SignUpData, signUpSchema } from "@/lib/schemas";
 import { cn, formatCognitoErrorMessages } from "@/lib/utils";
 import { handleSignUp } from "@/services/auth/authCognito";
 import { zodResolver } from "@hookform/resolvers/zod";

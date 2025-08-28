@@ -32,16 +32,16 @@ const applicationSchema: Schema<IApplication> = new Schema(
       trim: true,
     },
     message: { type: String, trim: true },
-    propertyId: {
-      type: Schema.Types.ObjectId,
-      ref: "Property",
-      required: [true, "Property reference is required."],
-    },
     tenantCognitoId: {
       type: String,
       required: [true, "Tenant Cognito ID is required."],
       index: true,
       trim: true,
+    },
+    property: {
+      type: Schema.Types.ObjectId,
+      ref: "Property",
+      required: [true, "Property reference is required."],
     },
     lease: {
       type: Schema.Types.ObjectId,
@@ -50,6 +50,11 @@ const applicationSchema: Schema<IApplication> = new Schema(
     tenant: {
       type: Schema.Types.ObjectId,
       ref: "Tenant",
+      required: [true, "Tenant reference is required."],
+    },
+    manager: {
+      type: Schema.Types.ObjectId,
+      ref: "Manager",
       required: [true, "Tenant reference is required."],
     },
   },

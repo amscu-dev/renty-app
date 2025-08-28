@@ -6,16 +6,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthTenant } from "@/hooks/useAuthType";
 import {
   useAddFavoritePropertyMutation,
-  useGetAuthUserQuery,
   useGetPropertiesQuery,
   useGetTenantQuery,
   useRemoveFavoritePropertyMutation,
 } from "@/state/api";
 import { useAppSelector } from "@/state/redux";
-// import Card from "@/components/Card";
+
 import React from "react";
 import { toast } from "sonner";
-// import CardCompact from "@/components/CardCompact";
 
 const Listings = () => {
   const { data: authTentant } = useAuthTenant();
@@ -58,7 +56,6 @@ const Listings = () => {
     }
   };
 
-  // To make Loading Skeleton
   if (isLoadingProperties || isFetchingProperties)
     return (
       <div className="flex w-full flex-col gap-5 pr-2">
@@ -74,7 +71,7 @@ const Listings = () => {
     );
   if (isError || !properties)
     return <NoData message="Failed to fetch properties" />;
-  // To make a screen to 0 properties...
+
   if (properties.data.length === 0)
     return <NoData message="No properties found." />;
 

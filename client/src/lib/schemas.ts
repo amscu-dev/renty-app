@@ -3,7 +3,10 @@ import { PropertyTypeEnum } from "@/lib/constants";
 
 export const propertySchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z
+    .string()
+    .min(25, "A description of minimum 25 characters is required.")
+    .max(250, "A description can have maximum 250 characters."),
   pricePerMonth: z.coerce.number().positive().min(0).int(),
   securityDeposit: z.coerce.number().positive().min(0).int(),
   applicationFee: z.coerce.number().positive().min(0).int(),
@@ -20,7 +23,7 @@ export const propertySchema = z.object({
   propertyType: z.nativeEnum(PropertyTypeEnum),
   address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
+  state: z.string().optional(),
   country: z.string().min(1, "Country is required"),
   postalCode: z.string().min(1, "Postal code is required"),
 });
@@ -29,7 +32,7 @@ export type PropertyFormData = z.infer<typeof propertySchema>;
 
 export const applicationSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().optional(),
 });
@@ -38,7 +41,7 @@ export type ApplicationFormData = z.infer<typeof applicationSchema>;
 
 export const settingsSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
 });
 

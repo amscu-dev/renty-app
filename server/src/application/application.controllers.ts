@@ -13,6 +13,7 @@ import { ApplicationStatus } from "./application.interface";
 import { ILease } from "../lease/lease.interface";
 import { matchedData, validationResult } from "express-validator";
 import formatValidationErrors from "../utils/formatValidationErrors";
+import { IManager } from "../manager/manager.interface";
 
 interface AuthenticatedRequest extends Request {
   user: { id: string; role: string };
@@ -94,6 +95,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
           message,
           property: property._id,
           tenant: tenant._id,
+          manager: property.manager,
           tenantCognitoId: tenantCognitoId,
           // TO COMPLETE WITH LEASE ID
         });
@@ -285,11 +287,12 @@ export const listApplications = catchAsync<AuthenticatedRequest>(
     }
 
     let applications = await query
-      ?.populate<{ lease: ILease; property: IProperty; tenant: ITenant }>([
-        "lease",
-        "property",
-        "tenant",
-      ])
+      ?.populate<{
+        lease: ILease;
+        property: IProperty;
+        tenant: ITenant;
+        manager: IManager;
+      }>(["lease", "property", "tenant", "manager"])
       .lean();
 
     function calculateNextPaymentDate(startDate: Date): Date {

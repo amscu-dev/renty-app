@@ -14,9 +14,10 @@ export interface IApplication {
   phoneNumber: string;
   message?: string;
   tenantCognitoId: string;
+  property: Types.ObjectId;
   lease: Types.ObjectId;
-  propertyId: Types.ObjectId;
   tenant: Types.ObjectId;
+  manager: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

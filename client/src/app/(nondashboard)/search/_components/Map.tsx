@@ -25,7 +25,6 @@ function Map() {
     isError,
   } = useGetPropertiesQuery(filters);
 
-  // 1) Init map - o singură dată
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -39,12 +38,11 @@ function Map() {
     map.on("load", () => setIsMapReady(true));
     mapRef.current = map;
 
-    // resize după mount
     const t = setTimeout(() => map.resize(), 700);
 
     return () => {
       clearTimeout(t);
-      // curățăm marker-ele și harta
+
       markersRef.current.forEach((m) => m.remove());
       markersRef.current = [];
       map.remove();
@@ -53,7 +51,6 @@ function Map() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 2) Mută centrul fără să recreezi harta
   useEffect(() => {
     if (!isMapReady || !mapRef.current) return;
     if (filters.coordinates) {
@@ -64,22 +61,18 @@ function Map() {
     }
   }, [isMapReady, filters.coordinates]);
 
-  // 3) Actualizează marker-ele când avem proprietăți noi
   useEffect(() => {
     if (!isMapReady || isLoading || isError || !properties || !mapRef.current)
       return;
 
     setIsMapUpdating(true);
 
-    // ștergem marker-ele anterioare
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
-    // adăugăm marker-ele noi
     properties.data.forEach((property: IProperty) => {
       const marker = createPropertyMarker(property, mapRef.current!);
 
-      // exemplul tău de schimbare a culorii
       const el = marker.getElement();
       const path = el.querySelector("path[fill='#3FB1CE']");
       if (path) path.setAttribute("fill", "#000000");

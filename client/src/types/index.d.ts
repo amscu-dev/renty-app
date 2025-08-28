@@ -1,8 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { AuthUser } from "aws-amplify/auth";
-import { Manager, Tenant, Property, Application } from "./tenant";
 import { MotionProps as OriginalMotionProps } from "framer-motion";
-import { IManager } from "./manager";
 
 declare module "framer-motion" {
   interface MotionProps extends OriginalMotionProps {
@@ -92,11 +90,47 @@ declare global {
   }
 
   interface ApplicationCardProps {
-    application: Application;
+    application: IApplication;
     userType: "manager" | "renter";
     children: React.ReactNode;
   }
-
+  interface IApplication {
+    _id: string;
+    applicationDate: string;
+    status: ApplicationStatus;
+    tenantCognitoId: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    message: string;
+    property: IProperty;
+    lease: ILease;
+    tenant: ITenant;
+    manager: IManager;
+  }
+  interface CreateIApplication {
+    propertyId: string;
+    tenantCognitoId: string;
+    name: string;
+    email: string;
+    applicationDate: string;
+    status: ApplicationStatus;
+    phoneNumber: string;
+    message?: string;
+  }
+  interface UpdateIApplication {
+    _id: string;
+    applicationDate?: string;
+    status?: ApplicationStatus;
+    property: IProperty;
+    tenantCognitoId?: string;
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    message?: string;
+    lease?: ILease;
+    tenant?: ITenant;
+  }
   interface CardProps {
     property: IProperty;
     isFavorite: boolean;
@@ -229,30 +263,6 @@ declare global {
     Pending = "Pending",
     Denied = "Denied",
     Approved = "Approved",
-  }
-
-  export interface IApplication {
-    applicationDate: string;
-    status: ApplicationStatus;
-    propertyId: string;
-    tenantCognitoId: string;
-    name: string;
-    email: string;
-    phoneNumber: string;
-    message?: string;
-  }
-  export interface UpdateIApplication {
-    _id: string;
-    applicationDate?: string;
-    status?: ApplicationStatus;
-    propertyId?: string;
-    tenantCognitoId?: string;
-    name?: string;
-    email?: string;
-    phoneNumber?: string;
-    message?: string;
-    lease?: string;
-    tenant?: string;
   }
 
   export interface ILease {

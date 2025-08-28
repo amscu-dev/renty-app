@@ -8,11 +8,7 @@ import { AuthData, authSchema } from "@/lib/schemas";
 import { cn, formatCognitoErrorMessages } from "@/lib/utils";
 import { handleSignIn } from "@/services/auth/authCognito";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AuthSession,
-  fetchAuthSession,
-  getCurrentUser,
-} from "aws-amplify/auth";
+import { AuthSession, fetchAuthSession } from "aws-amplify/auth";
 import { CheckCircle2Icon, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,7 +64,6 @@ function SignInPage() {
             : DEFAULT_LOGIN_REDIRECT_TENANTS;
         setTimeout(() => {
           router.replace(endpoint);
-          // router.replace("/landing");
         }, 1000);
       }
       // MFA

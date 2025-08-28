@@ -11,8 +11,7 @@ import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 import { cleanParams, cn, formatPriceValue } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Filter, Grid, List, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Filter, Grid, List } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -56,9 +55,9 @@ function FiltersBar() {
       }, 1000),
     [pathname, router],
   );
-
   const handleFilterChange = (
     key: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any,
     isMin: boolean | null,
   ) => {

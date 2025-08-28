@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetAuthUserQuery, useGetPropertyQuery } from "@/state/api";
+import { useGetAuthUserQuery } from "@/state/api";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import ImagePreviews from "./_components/ImagePreviews";
@@ -9,7 +9,6 @@ import PropertyDetails from "./_components/PropertyDetails";
 import PropertyLocation from "./_components/PropertyLocation";
 import ContactWidget from "./_components/ContactWidget";
 import ApplicationModal from "./_components/ApplicationModal";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const SingleListing = () => {
   const { id } = useParams();

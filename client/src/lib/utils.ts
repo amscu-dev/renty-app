@@ -6,8 +6,6 @@ import { type JWT, type AuthUser } from "aws-amplify/auth";
 
 export function formatCognitoErrorMessages(error: unknown): string {
   if (error instanceof Error) {
-    console.log(error.message);
-    console.log(error.name);
     if (error.name === "UsernameExistsException")
       return "Email is already in use. Please choose another one.";
     if (error.name === "CodeMismatchException") return error.message;

@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 
 function CognitoError({ message }: { message: string }) {
   const show = message.trim().length > 0;
