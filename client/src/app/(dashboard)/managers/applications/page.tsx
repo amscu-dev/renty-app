@@ -30,7 +30,8 @@ const Applications = () => {
       skip: !authUser?.cognitoInfo?.userId,
     },
   );
-  const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
+  const [updateApplicationStatus, { isLoading: isUpdatingApplicationStatus }] =
+    useUpdateApplicationStatusMutation();
 
   const handleStatusChange = async (id: string, status: string) => {
     await updateApplicationStatus({ id, status });
@@ -56,11 +57,19 @@ const Applications = () => {
         onValueChange={setActiveTab}
         className="my-5 w-full"
       >
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="approved">Approved</TabsTrigger>
-          <TabsTrigger value="denied">Denied</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 bg-slate-300">
+          <TabsTrigger value="all" className="cursor-pointer">
+            All
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="cursor-pointer">
+            Pending
+          </TabsTrigger>
+          <TabsTrigger value="approved" className="cursor-pointer">
+            Approved
+          </TabsTrigger>
+          <TabsTrigger value="denied" className="cursor-pointer">
+            Denied
+          </TabsTrigger>
         </TabsList>
         {["all", "pending", "approved", "denied"].map((tab) => (
           <TabsContent key={tab} value={tab} className="mt-5 w-full">
@@ -119,10 +128,10 @@ const Applications = () => {
                     <div className="flex gap-2">
                       <Link
                         href={`/search/${application.property._id}`}
-                        className={`hover:bg-primary-700 hover:text-primary-50 flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700`}
+                        className={`hover:text-primary-50 flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-orange-600`}
                         scroll={false}
                       >
-                        <Hospital className="mr-2 h-5 w-5" />
+                        <Hospital className="mr-2 h-5 w-5 cursor-pointer" />
                         Property Details
                       </Link>
                       {application.status === "Approved" && (
@@ -136,7 +145,8 @@ const Applications = () => {
                       {application.status === "Pending" && (
                         <>
                           <button
-                            className="rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-500"
+                            disabled={isUpdatingApplicationStatus}
+                            className="cursor-pointer rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-500"
                             onClick={() =>
                               handleStatusChange(application._id, "Approved")
                             }
@@ -144,7 +154,8 @@ const Applications = () => {
                             Approve
                           </button>
                           <button
-                            className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-500"
+                            disabled={isUpdatingApplicationStatus}
+                            className="cursor-pointer rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-500"
                             onClick={() =>
                               handleStatusChange(application._id, "Denied")
                             }

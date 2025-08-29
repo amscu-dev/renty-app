@@ -51,7 +51,7 @@ function TenantFavoritesPage() {
             isFavorite={true}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            propertyLink={`/tenants/residences/${property._id}`}
+            propertyLink={`/search/${property._id}`}
           />
         ))}
       </div>

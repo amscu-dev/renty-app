@@ -14,6 +14,7 @@ import { ILease } from "../lease/lease.interface";
 import { matchedData, validationResult } from "express-validator";
 import formatValidationErrors from "../utils/formatValidationErrors";
 import { IManager } from "../manager/manager.interface";
+import { ILocation } from "../location/location.interface";
 
 interface AuthenticatedRequest extends Request {
   user: { id: string; role: string };
@@ -26,6 +27,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
     next: NextFunction
   ): Promise<void> => {
     // EXTRACT VALIDATION DATA
+    console.log("hit route");
     const results = validationResult(req).array();
     if (results.length > 0) {
       const validationErros = formatValidationErrors(results);
@@ -52,7 +54,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
     if (!tenant)
       return next(
         new AppError(
-          "Property does not exist! Please try again with a valid one!",
+          "Tenant does not exist! Please try again with a valid one!",
           StatusCodes.NOT_FOUND
         )
       );
@@ -67,7 +69,6 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
           StatusCodes.NOT_FOUND
         )
       );
-
     // 04. Create And Execute Transaction
     const session = await mongoose.startSession();
     try {
@@ -80,7 +81,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
           ), // 1 year from today
           rent: property.pricePerMonth,
           deposit: property.securityDeposit,
-          propertyId: property._id,
+          property: property._id,
           tenant: tenant._id,
           tenantCognitoId: tenantCognitoId,
           // TO COMPLETE WITH APP ID
@@ -102,6 +103,7 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
         lease.application = application._id;
         application.lease = lease._id;
         // UPDATE PROPERTY WITH NEW LEASES AND APPLICATION
+
         const updatedProperty = await Property.findByIdAndUpdate(
           propertyId,
           {
@@ -123,10 +125,12 @@ export const createApplication = catchAsync<AuthenticatedRequest>(
           },
           { session }
         );
+
         await application.save({ session });
         await lease.save({ session });
         return application;
       });
+
       // DE VAZUT CU CE POPULAM
       const responseApplication = await Application.findById(
         newApplication._id
@@ -289,10 +293,18 @@ export const listApplications = catchAsync<AuthenticatedRequest>(
     let applications = await query
       ?.populate<{
         lease: ILease;
-        property: IProperty;
+        property: IProperty & { location: ILocation };
         tenant: ITenant;
         manager: IManager;
-      }>(["lease", "property", "tenant", "manager"])
+      }>([
+        { path: "lease" },
+        {
+          path: "property",
+          populate: { path: "location" },
+        },
+        { path: "tenant" },
+        { path: "manager" },
+      ])
       .lean();
 
     function calculateNextPaymentDate(startDate: Date): Date {

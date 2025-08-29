@@ -77,20 +77,13 @@ export interface IPartialPropertyWithId extends Partial<IProperty> {
 }
 
 interface dataType {
-  place_id: number;
-  osm_id: number;
   lat: number;
   lon: number;
-  class: string;
-  type: string;
-  place_rank: number;
-  importance: number;
-  addresstype: string;
-  name: string;
-  display_name: string;
-  boundingbox: number[];
+  formatted: string;
 }
 
 export interface GEO_API_REPONSE_TYPE {
-  data: dataType[];
+  data: {
+    results: dataType[];
+  };
 }

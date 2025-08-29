@@ -1,6 +1,12 @@
 import { cn } from "@/lib/utils";
 
-function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
+function DashboardLayoutSkeleton({
+  isLoading,
+  message = "Preparing your dashboard",
+}: {
+  isLoading: boolean;
+  message?: string;
+}) {
   return (
     <div
       className={cn(
@@ -10,7 +16,7 @@ function DashboardLayoutSkeleton({ isLoading }: { isLoading: boolean }) {
     >
       <div className="items flex items-end justify-center gap-2">
         <p className="m-0 font-mono text-3xl leading-none font-semibold tracking-[4px] text-slate-200">
-          Preparing your dashboard
+          {message}
         </p>
         <div className="loader"></div>
       </div>

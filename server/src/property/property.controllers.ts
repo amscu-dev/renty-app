@@ -51,6 +51,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
       state,
       country,
       postalCode,
+      housenumber,
       name,
       description,
       pricePerMonth,
@@ -65,7 +66,27 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
       squareFeet,
       propertyType,
     } = matchedData(req);
-
+    console.log({
+      address,
+      city,
+      state,
+      country,
+      postalCode,
+      housenumber,
+      name,
+      description,
+      pricePerMonth,
+      securityDeposit,
+      applicationFee,
+      amenities,
+      highlights,
+      isPetsAllowed,
+      isParkingIncluded,
+      beds,
+      baths,
+      squareFeet,
+      propertyType,
+    });
     if (!address || !city || !country || !postalCode) {
       return next(
         new AppError(
@@ -94,17 +115,17 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
       geocodingResponse = await axios.get(`${process.env.GEO_API}`, {
         params: {
           street: address,
+          housenumber: housenumber,
           city,
           country,
-          postalcode: postalCode,
+          ...(state ? { state } : {}),
+          postcode: postalCode,
           format: GEO_API_RESPONSE_FORMAT,
-          limit: GEO_API_RESPONSE_LIMIT,
-        },
-        headers: {
-          "User-Agent": GEO_API_USER_AGENT_HEADER,
+          apiKey: process.env.GEOAPIFY_API_KEY,
         },
       });
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error)) {
         if (error.code === "ECONNABORTED") {
           // Timeout
@@ -148,7 +169,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
         );
       }
     }
-    if (geocodingResponse.data.length === 0) {
+    if (geocodingResponse.data.results.length === 0) {
       return next(
         new AppError(
           "Sorry, we couldn't find your location. Please ensure you fill all the address fields with proper information.",
@@ -157,7 +178,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
       );
     }
     // 05. If all good extract lat, lang from geocodingResponse
-    const { lat, lon, display_name } = geocodingResponse.data[0];
+    const { lat, lon, formatted } = geocodingResponse.data.results[0];
 
     // 06. Upload Images to S3 Bucket.
     // 06.01 Costruct Object Command
@@ -167,7 +188,7 @@ export const createProperty = catchAsync<AuthenticatedRequest>(
     let location = new Location({
       address,
       city,
-      fullAddress: display_name,
+      fullAddress: formatted,
       state,
       country,
       postalCode,

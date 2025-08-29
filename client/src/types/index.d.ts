@@ -275,7 +275,7 @@ declare global {
     property: string;
     application?: string;
     payments: string[];
-    nextPaymentDate?: Date;
+    nextPaymentDate: Date;
     _id: string;
   }
 

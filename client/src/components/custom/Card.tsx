@@ -52,8 +52,8 @@ const Card = ({
           </button>
         )}
       </div>
-      <div className="p-4">
-        <h2 className="mb-1 text-xl font-bold">
+      <div className="flex h-1/2 flex-col p-4">
+        <h2 className="mb-auto text-xl font-bold">
           {propertyLink ? (
             <Link
               href={propertyLink}
@@ -67,7 +67,7 @@ const Card = ({
             property.name
           )}
         </h2>
-        <p className="mb-2 text-gray-600">
+        <p className="mt-auto mb-2 text-gray-600">
           {property?.location?.address}, {property?.location?.city}
         </p>
         <div className="flex items-center justify-between">

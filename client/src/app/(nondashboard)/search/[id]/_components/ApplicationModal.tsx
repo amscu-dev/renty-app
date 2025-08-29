@@ -12,13 +12,13 @@ import { useCreateApplicationMutation, useGetAuthUserQuery } from "@/state/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-
+import { ApplicationStatus } from "@/lib/constants";
 const ApplicationModal = ({
   isOpen,
   onClose,
   propertyId,
 }: ApplicationModalProps) => {
-  const [createApplication] = useCreateApplicationMutation();
+  const [createApplication, { isLoading }] = useCreateApplicationMutation();
   const { data: authUser } = useGetAuthUserQuery();
   const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
@@ -37,6 +37,13 @@ const ApplicationModal = ({
       );
       return;
     }
+    console.log({
+      ...data,
+      applicationDate: new Date().toISOString(),
+      status: ApplicationStatus.Pending,
+      propertyId: propertyId,
+      tenantCognitoId: authUser.cognitoInfo.userId,
+    });
 
     await createApplication({
       ...data,
@@ -45,6 +52,7 @@ const ApplicationModal = ({
       propertyId: propertyId,
       tenantCognitoId: authUser.cognitoInfo.userId,
     });
+    form.reset();
     onClose();
   };
 
@@ -80,7 +88,11 @@ const ApplicationModal = ({
               type="textarea"
               placeholder="Enter any additional information"
             />
-            <Button type="submit" className="bg-primary-700 w-full text-white">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full cursor-pointer bg-slate-900 text-white hover:bg-orange-600"
+            >
               Submit Application
             </Button>
           </form>

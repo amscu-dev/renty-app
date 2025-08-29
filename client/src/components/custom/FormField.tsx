@@ -24,15 +24,29 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { Edit, X, Plus, CircleSlash } from "lucide-react";
-import { registerPlugin } from "filepond";
-import { FilePond } from "react-filepond";
+import { Edit, X, Plus } from "lucide-react";
+import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectGroup,
+  MultiSelectItem,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "../ui/multi-select";
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize,
+);
 
 interface FormFieldProps {
   name: string;
@@ -47,7 +61,8 @@ interface FormFieldProps {
     | "password"
     | "file"
     | "multi-input"
-    | "radio-group";
+    | "radio-group"
+    | "multi-select";
   placeholder?: string;
   options?: { value: string; label: string }[];
   optionsRadio?: { value: string; label: string; explanation: string }[];
@@ -95,6 +110,34 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
             className={`border-gray-200 p-4 ${inputClassName}`}
           />
         );
+      case "multi-select":
+        return (
+          <MultiSelect
+            onValuesChange={field.onChange}
+            values={field.value || (initialValue as string[])}
+            defaultValues={field.value || (initialValue as string[])}
+          >
+            <MultiSelectTrigger className="w-full">
+              <MultiSelectValue
+                placeholder={placeholder}
+                overflowBehavior="wrap-when-open"
+              />
+            </MultiSelectTrigger>
+            <MultiSelectContent>
+              <MultiSelectGroup>
+                {options?.map((option) => (
+                  <MultiSelectItem
+                    key={option.value}
+                    value={option.value}
+                    className={`cursor-pointer hover:!bg-gray-100`}
+                  >
+                    {option.label}
+                  </MultiSelectItem>
+                ))}
+              </MultiSelectGroup>
+            </MultiSelectContent>
+          </MultiSelect>
+        );
       case "select":
         return (
           <Select
@@ -137,14 +180,22 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
       case "file":
         return (
           <FilePond
+            allowImagePreview
             className={`${inputClassName}`}
             onupdatefiles={(fileItems) => {
               const files = fileItems.map((fileItem) => fileItem.file);
               field.onChange(files);
             }}
+            maxFiles={10}
             allowMultiple={true}
             labelIdle={`Drag & Drop your images or <span class="filepond--label-action">Browse</span>`}
             credits={false}
+            allowFileTypeValidation
+            acceptedFileTypes={["image/jpeg", "image/png", "image/webp"]}
+            allowFileSizeValidation
+            maxFileSize="1MB"
+            maxTotalFileSize="10MB"
+            disabled={disabled}
           />
         );
       case "number":
@@ -244,6 +295,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
 };
 interface MultiInputFieldProps {
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any;
   placeholder?: string;
   inputClassName?: string;

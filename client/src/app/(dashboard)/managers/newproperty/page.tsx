@@ -33,12 +33,13 @@ function CreateNewPropertyPage() {
       isPetsAllowed: true,
       isParkingIncluded: true,
       photoUrls: [],
-      amenities: "",
-      highlights: "",
+      amenities: [],
+      highlights: [],
       beds: 1,
       baths: 1,
       squareFeet: 1000,
       address: "",
+      housenumber: "",
       city: "",
       state: "",
       country: "",
@@ -53,11 +54,8 @@ function CreateNewPropertyPage() {
 
     const payload = {
       ...rest,
-      amenities: [rest.amenities],
-      highlights: [rest.highlights],
       managerCognitoId: authUser.cognitoInfo.userId,
     };
-
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload));
 
@@ -71,8 +69,9 @@ function CreateNewPropertyPage() {
         router.replace(`/search/${created._id}`);
       }
     } catch (error) {
+      console.log(error);
       if (typeof error === "object" && error && "status" in error) {
-        if (error.status === 400) {
+        if (error.status === 400 || error.status === 404) {
           setError("Please provided a valid address for your location.");
         }
       }
@@ -200,7 +199,8 @@ function CreateNewPropertyPage() {
                 <CustomFormField
                   name="amenities"
                   label="Amenities"
-                  type="select"
+                  placeholder="Please choose one or more amenities"
+                  type="multi-select"
                   disabled={isCreatingNewProperty}
                   options={Object.keys(AmenityEnum).map((amenity) => ({
                     value: amenity,
@@ -210,7 +210,8 @@ function CreateNewPropertyPage() {
                 <CustomFormField
                   name="highlights"
                   label="Highlights"
-                  type="select"
+                  placeholder="Please choose one or more highlights"
+                  type="multi-select"
                   disabled={isCreatingNewProperty}
                   options={Object.keys(HighlightEnum).map((highlight) => ({
                     value: highlight,
@@ -241,7 +242,13 @@ function CreateNewPropertyPage() {
               <h2 className="mb-4 text-lg font-semibold">
                 Additional Information
               </h2>
-              <CustomFormField name="address" label="Address" />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <CustomFormField name="address" label="Address" />
+                <CustomFormField
+                  name="housenumber"
+                  label="Property Address Number"
+                />
+              </div>
               <div className="flex justify-between gap-4">
                 <CustomFormField name="city" label="City" className="w-full" />
                 <CustomFormField

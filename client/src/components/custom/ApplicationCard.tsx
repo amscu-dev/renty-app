@@ -10,7 +10,7 @@ function ApplicationCard({
   const [imgSrc, setImgSrc] = useState(
     application.property.photoUrls?.[0] || "/placeholder.jpg",
   );
-
+  console.log(application);
   const statusColor =
     application.status === "Approved"
       ? "bg-green-500"
@@ -78,7 +78,7 @@ function ApplicationCard({
           </div>
           <div className="flex justify-between">
             <span className="text-gray-500">Next Payment:</span>{" "}
-            {application.lease.nextPaymentDate?.toLocaleDateString()}
+            {new Date(application.lease?.nextPaymentDate)?.toLocaleDateString()}
           </div>
         </div>
 

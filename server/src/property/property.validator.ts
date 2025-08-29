@@ -279,6 +279,18 @@ export const createPropertyValidator = checkSchema(
         errorMessage: "Property city cannot have more than 40 characters.",
       },
     },
+    housenumber: {
+      trim: true,
+      escape: true,
+      notEmpty: {
+        errorMessage: "A property must have a valid address number.",
+      },
+      isString: { errorMessage: "Address number must be a string." },
+      isLength: {
+        options: { max: 25 },
+        errorMessage: "Address number cannot have more than 25 characters.",
+      },
+    },
     state: {
       optional: true,
       trim: true,

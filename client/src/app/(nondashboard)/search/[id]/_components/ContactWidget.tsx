@@ -47,7 +47,7 @@ const ContactWidget = ({ onOpenModal, propertyId }: ContactWidgetProps) => {
         </div>
       </div>
       <Button
-        className="bg-primary-700 hover:bg-primary-600 w-full text-white"
+        className="bg-primary-700 hover:bg-primary-600 w-full cursor-pointer text-white"
         onClick={handleButtonClick}
         disabled={isOwnProperty}
       >

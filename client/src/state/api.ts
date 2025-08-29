@@ -105,6 +105,7 @@ export const api = createApi({
               meta: res.meta,
             };
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           return { error: error.message || "Could not fetch user data" };
         }

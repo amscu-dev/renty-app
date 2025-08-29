@@ -24,6 +24,11 @@ import {
   LucideIcon,
 } from "lucide-react";
 
+export enum ApplicationStatus {
+  Pending = "Pending",
+  Denied = "Denied",
+  Approved = "Approved",
+}
 export enum AmenityEnum {
   WasherDryer = "WasherDryer",
   AirConditioning = "AirConditioning",
